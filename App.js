@@ -2,12 +2,12 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { View, Text, Button } from 'react-native';
 import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 
-import Login from './Login';
+import Login from './screens/Login';
 
-const Navigator = createStackNavigator({
-    Login: { screen: Login}
+const Navigator = createDrawerNavigator({
+    Login: { screen: Login },
 });
 
 const App = createAppContainer(Navigator);

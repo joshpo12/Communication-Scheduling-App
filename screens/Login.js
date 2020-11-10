@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, Alert, ScrollView, Keyboard } from 'react-native';
-import logo from './assets/goldicon.png'
+import logo from '../assets/goldicon.png'
 import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler'
 const {width:WIDTH} = Dimensions.get('window')
 

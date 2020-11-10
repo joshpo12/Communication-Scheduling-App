@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, Alert, ScrollView, Keyboard } from 'react-native';
 import logo from './assets/goldicon.png'
-
+import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler'
 const {width:WIDTH} = Dimensions.get('window')
 
 export default class Login extends Component {
@@ -11,7 +11,7 @@ export default class Login extends Component {
     render() {
         const { navigate } = this.props.navigation;
         return (
-            <View>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <Text style={styles.logoText}></Text>
                 <SafeAreaView style={styles.logoContainer}>
                     <Image source={logo}/>
@@ -22,7 +22,6 @@ export default class Login extends Component {
                     <TextInput
                         style={styles.input}
                         placeholder={'Username'}
-                        placeholderTextColor='white'
                     />    
                 </View>
 
@@ -30,20 +29,34 @@ export default class Login extends Component {
                     <TextInput
                         style={styles.input}
                         placeholder={'Password'}
-                        placeholderTextColor='white'
                         secureTextEntry={true}
                        
                     />
                 </View>
+                <View>
+                    <TouchableOpacity
+                        style = {styles.createAccountButton}
+                        activeOpacity = {.5}
+                        onPress = {buttonPressed}
+                        >
+                            <Text sytle = {styles.buttonText}> Log In</Text>
+                    </TouchableOpacity>
+                </View>
                 <View alignItems='center'>
-                    <Text style={styles.registerText}>Register Here</Text>
+                    <Text style={styles.registerText}>Don't have an account? Register Here</Text>
                 </View>
                 
-            </View>
+            </TouchableWithoutFeedback>
         );
     }
 }
-
+const buttonPressed = () => {
+    Alert.alert(
+        "Button has been pressed!",
+        "You have pressed the button!"
+        )
+        
+}
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,
@@ -53,8 +66,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logoContainer:{
-        marginTop: 25,
-        marginBottom: 25,
+        marginTop: 50,
+        marginBottom: 60,
         alignItems: 'center',
         width:360,
         
@@ -74,14 +87,30 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         fontSize: 16,
         paddingLeft: 45,
-        backgroundColor: 'gray',
-        color: 'white',
+        backgroundColor: '#F5B0C2',
+        borderColor: '#fff',
         marginHorizontal: 25,
-        marginTop: 10.5,
-        marginBottom: 10.5
+        marginTop: 20,
+        
     },
     registerText:{
         marginTop: 10,
         fontSize: 10
+    },
+    createAccountButton: {
+        alignItems: 'center',
+        marginTop: 15,
+        marginBottom: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
+        marginLeft: 145,
+        marginRight: 145,
+        backgroundColor: '#F5B0C2',
+        borderRadius: 30,
+        
+        borderColor: '#fff',
+    },
+    buttonText: {
+        textAlign: 'center'
     }
 });

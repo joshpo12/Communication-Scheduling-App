@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Button, Alert, AppRegistry } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import profilepic from './assets/profilepic.png';
+import profilepic from '../assets/profilepic.png';
 import { StackNavigator } from 'react-navigation'
 import App from './App';
 

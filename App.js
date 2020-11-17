@@ -1,25 +1,33 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import { View, Text, Button } from 'react-native';
-import { createAppContainer } from 'react-navigation';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 
-
-//import AboutMe from './screens/AboutMe';
-import Auction from './screens/Auction_Form';
-
 import Login from './screens/Login';
-import MainPage from './screens/MainPage';
-import Registration from './screens/Registration';
-import SubmitAssignment from './screens/SubmitAssignment';
+import AnimatedLoader from './screens/AnimatedLoader'
+import AboutMe from './screens/AboutMe'
+import AuctionForm from './screens/Auction_Form'
+import SubmitAssignment from './screens/SubmitAssignment'
+import Registration from './screens/Registration'
+import Scheduling from './screens/Scheduling'
+import Messager from './screens/messager'
+import Main from './screens/MainPage'
 
-
-
-const Navigator = createDrawerNavigator({
-    MainPage: { screen: MainPage },
-    Login: { screen: Login },
+const DrawerNavigator = createDrawerNavigator({
+    AnimatedLoader: { screen: AnimatedLoader },
+    Login: { screen: Login},
+    Registration: { screen: Registration},
+    AboutMe: {screen: AboutMe},
+    AuctionForm: {screen: AuctionForm},
+    SubmitAssignment: {screen: SubmitAssignment},
+    Scheduling: { screen: Scheduling},
+    Messager: { screen: Messager},
+    Main: { screen: Main}
 });
 
-const App = createAppContainer(Navigator);
+const App = createAppContainer(DrawerNavigator);
 
 export default App;

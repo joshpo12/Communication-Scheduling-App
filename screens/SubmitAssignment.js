@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, BackHandler, Button, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import finance from './assets/financeClass.jpg'
-import stress from './assets/stress.jpg'
-import female from './assets/female.png'
+import finance from '../assets/financeClass.jpg'
+import stress from '../assets/stress.jpg'
+import female from '../assets/female.png'
 
 const {width:WIDTH} = Dimensions.get('window')
 

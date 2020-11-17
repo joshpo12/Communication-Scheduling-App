@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Button, Alert,
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import profilepic from '../assets/profilepic.png';
 import { StackNavigator } from 'react-navigation'
-import App from './App';
+
 
 const {width:WIDTH} = Dimensions.get('window')
 

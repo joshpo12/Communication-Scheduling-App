@@ -1,9 +1,10 @@
 {
   "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": "https://eg-gpj.qreimer.scheduling-app-mobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.eg-gpj.qreimer.scheduling-app-mobile.exp.direct",
-  "ngrokPid": 59814
+  "packagerPort": 19001,
+  "packagerPid": 12899,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
+  "webpackServerPort": 19006
 }

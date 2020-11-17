@@ -1,9 +1,9 @@
 {
-  "devToolsPort": 19002,
+  "devToolsPort": 19003,
   "expoServerPort": 19000,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": "https://eg-gpj.qreimer.scheduling-app-mobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.eg-gpj.qreimer.scheduling-app-mobile.exp.direct",
-  "ngrokPid": 59814
+  "packagerPort": 19001,
+  "packagerPid": 28913,
+  "expoServerNgrokUrl": "https://zq-s5n.joshpo.scheduling-app-mobile.exp.direct",
+  "packagerNgrokUrl": "https://packager.zq-s5n.joshpo.scheduling-app-mobile.exp.direct",
+  "ngrokPid": 28931
 }

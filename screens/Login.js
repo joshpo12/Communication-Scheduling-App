@@ -18,7 +18,7 @@ export default class Login extends Component {
                     
                 </SafeAreaView>
                 
-                <View>
+                <View> 
                     <TextInput
                         style={styles.input}
                         placeholder={'Username'}
@@ -41,9 +41,14 @@ export default class Login extends Component {
                         >
                             <Text sytle = {styles.buttonText}> Log In</Text>
                     </TouchableOpacity>
-                </View>
+                    </View>
                 <View alignItems='center'>
-                    <Text style={styles.registerText}>Don't have an account? Register Here</Text>
+                        <Text style={styles.registerText}>Don't have an account?</Text>
+                        <TouchableOpacity 
+                        activeOpacity = {.5}
+                        onPress={() => this.props.navigation.navigate("Registration")}>
+                            <Text style = {styles.registerText}>Register Here</Text> 
+                        </TouchableOpacity>    
                 </View>
                 
             </TouchableWithoutFeedback>
@@ -92,6 +97,10 @@ const styles = StyleSheet.create({
         marginHorizontal: 25,
         marginTop: 20,
         
+    },
+    registerText:{
+        marginTop: 10,
+        fontSize: 10
     },
     registerText:{
         marginTop: 10,

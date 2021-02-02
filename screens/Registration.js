@@ -1,7 +1,8 @@
 import React, { Component, useState } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, BackHandler, Button, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import logo from '../assets/goldicon.png'
+import logo from '../assets/goldicon.png';
+import firebase from '../database/firebase.js';
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -9,6 +10,50 @@ export default class Registration extends Component {
     static navigationOptions = {
         title: 'Registration', 
     };
+
+    constructor() {
+        super();
+        this.state = {
+            userName: '',
+            email: '',
+            password: '',
+            isLoading: false
+        }
+    }
+
+    //takes in user input and updates the registration values
+    updateInput = (val, prop) => {
+        const state = this.state;
+        state[prop] = val;
+        this.setState(state);
+    }
+
+    register = () => {
+        if(this.state.email === '' && this.state.password === '') {
+            Alert.alert('Enter details to signup.')
+        } else {
+            this.setState({isLoading: true})
+            firebase.auth()
+            .createUserWithEmailAndPassword(this.state.email, this.state.password)
+            .then((res) => {
+                res.user.updateProfile({
+                    userName: this.state.userName
+                })
+                console.log('User registered successfully!')
+                this.setState({
+                    isLoading: false,
+                    userName: '',
+                    email: '',
+                    password: ''
+                })
+                this.props.navigation.navigate('Main')
+            })
+            .catch(error => this.setState({errorMessage: error.message }))
+            
+            //this.props.navigation.navigate('Main')
+        }
+    }
+
 
     render() {
         const { navigation } = this.props.navigation;
@@ -23,15 +68,9 @@ export default class Registration extends Component {
                 <View>
                     <TextInput
                         style={styles.input}
-                        placeholder={'First Name'}
-                        placeholderTextColor='white'
-                    />    
-                </View>
-
-                <View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={'Last Name'}
+                        placeholder={'Name'}
+                        value = {this.state.userName}
+                        onChangeText={(val) => this.updateInput(val, 'userName')}
                         placeholderTextColor='white'
                     />    
                 </View>
@@ -40,6 +79,8 @@ export default class Registration extends Component {
                     <TextInput
                         style={styles.input}
                         placeholder={'Email Address'}
+                        value = {this.state.email}
+                        onChangeText={(val) => this.updateInput(val, 'email')}
                         placeholderTextColor='white'
                     />    
                 </View>
@@ -48,14 +89,8 @@ export default class Registration extends Component {
                     <TextInput
                         style={styles.input}
                         placeholder={'Password'}
-                        placeholderTextColor='white'
-                    />    
-                </View>
-
-                <View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={'Confirm password'}
+                        value = {this.state.password}
+                        onChangeText={(val) => this.updateInput(val, 'password')}
                         placeholderTextColor='white'
                     />    
                 </View>
@@ -64,7 +99,7 @@ export default class Registration extends Component {
                     <TouchableOpacity
                         style = {styles.createAccountButton}
                         activeOpacity = {.5}
-                        onPress = {buttonPressed}
+                        onPress = {() => this.register()}
                         >
                             <Text style = {styles.buttonText}> Create Account</Text>
                     </TouchableOpacity>
@@ -75,13 +110,14 @@ export default class Registration extends Component {
     }
 }
 
-const buttonPressed = () => {
+/*const buttonPressed = () => {
     Alert.alert(
         "Button has been pressed!",
         "You have pressed the button!"
         )
         
-}
+}*/
+
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,

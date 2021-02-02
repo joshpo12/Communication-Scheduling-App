@@ -1,13 +1,53 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, Alert, ScrollView, Keyboard } from 'react-native';
-import logo from '../assets/goldicon.png'
-import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler'
+import logo from '../assets/goldicon.png';
+import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import firebase from '../database/firebase.js';
 const {width:WIDTH} = Dimensions.get('window')
 
 export default class Login extends Component {
     static navigationOptions = {
         title: 'Login', 
     };
+
+    constructor() {
+        super();
+        this.state = {
+            email: '',
+            password: '',
+            isLoading: false
+        }
+    }
+
+    updateInput = (val, prop) => {
+        const state = this.state;
+        state[prop] = val;
+        this.setState(state);
+    }
+
+    login = () => {
+        if(this.state.email === '' && this.state.password === '') {
+            Alert.alert('Enter details to login.')
+        } else {
+            this.setState({
+                isLoading: true,
+            })
+            firebase.auth()
+            .signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then((res) => {
+                console.log(res)
+                console.log('User login successful.')
+                this.setState({
+                    isLoading: false,
+                    email: '',
+                    password: ''
+                })
+                this.props.navigation.navigate('Main')
+            })
+            .catch(error => this.setState({ errorMessage: error.message}))
+        }
+    }
+
     render() {
         const { navigate } = this.props.navigation;
         return (
@@ -21,7 +61,9 @@ export default class Login extends Component {
                 <View> 
                     <TextInput
                         style={styles.input}
-                        placeholder={'Username'}
+                        placeholder={'Email'}
+                        value={this.state.email}
+                        onChangeText={(val) => this.updateInput(val, 'email')}
                     />    
                 </View>
 
@@ -29,6 +71,8 @@ export default class Login extends Component {
                     <TextInput
                         style={styles.input}
                         placeholder={'Password'}
+                        value={this.state.password}
+                        onChangeText={(val) => this.updateInput(val, 'password')}
                         secureTextEntry={true}
                        
                     />
@@ -37,7 +81,7 @@ export default class Login extends Component {
                     <TouchableOpacity
                         style = {styles.createAccountButton}
                         activeOpacity = {.5}
-                        onPress = {buttonPressed}
+                        onPress = {() => this.login()}
                         >
                             <Text sytle = {styles.buttonText}> Log In</Text>
                     </TouchableOpacity>
@@ -55,13 +99,13 @@ export default class Login extends Component {
         );
     }
 }
-const buttonPressed = () => {
+/*const buttonPressed = () => {
     Alert.alert(
         "Button has been pressed!",
         "You have pressed the button!"
         )
         
-}
+}*/
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,

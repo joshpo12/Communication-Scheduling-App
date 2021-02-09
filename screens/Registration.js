@@ -65,33 +65,32 @@ export default class Registration extends Component {
                     
                 </SafeAreaView>
                 
-                <View>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Name</Text>
                     <TextInput
+                        autoCapitalize="none"
                         style={styles.input}
-                        placeholder={'Name'}
                         value = {this.state.userName}
                         onChangeText={(val) => this.updateInput(val, 'userName')}
-                        placeholderTextColor='white'
                     />    
                 </View>
 
-                <View>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Email Address</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder={'Email Address'}
                         value = {this.state.email}
                         onChangeText={(val) => this.updateInput(val, 'email')}
-                        placeholderTextColor='white'
                     />    
                 </View>
 
-                <View>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Password</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder={'Password'}
                         value = {this.state.password}
                         onChangeText={(val) => this.updateInput(val, 'password')}
-                        placeholderTextColor='white'
+                        secureTextEntry={true}
                     />    
                 </View>
 
@@ -127,13 +126,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logoContainer:{
-        marginTop: 25,
-        marginBottom: 25,
+        marginTop: 50,
+        marginBottom: 60,
+        marginLeft: 25,
         alignItems: 'center',
         width:360,
-        
-        
-        
+    },
+    form: {
+        marginBottom: 48,
+        marginHorizontal: 30
     },
     logoText:{
         color: 'black',
@@ -142,18 +143,18 @@ const styles = StyleSheet.create({
         marginTop: 10,
         opacity: 0.5
     },
-    input:{
-        width: WIDTH - 55,
-        height: 45,
-        borderRadius: 25,
-        fontSize: 16,
-        paddingLeft: 45,
-        backgroundColor: 'gray',
-        color: 'white',
-        marginHorizontal: 25,
-        marginTop: 10.5,
-        marginBottom: 10.5
+    inputTitle:{
+        color: "#8A8F9E",
+        textTransform: "uppercase", 
     },
+    input:{
+        borderBottomColor: "#8A8F9E",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        height: 40,
+        fontSize: 15,
+        color: "#161F3D"
+    },
+    
     registerText:{
         color: 'blue',
         marginTop: 10,
@@ -161,15 +162,16 @@ const styles = StyleSheet.create({
     },
     createAccountButton: {
         alignItems: 'center',
-        marginTop: 10,
-        paddingTop: 15,
-        paddingBottom: 15,
+        marginTop: 15,
+        marginBottom: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
         marginLeft: 145,
         marginRight: 145,
         backgroundColor: '#F5B0C2',
         borderRadius: 30,
-        borderWidth: 1,
-        borderColor: '#777777',
+        
+        borderColor: '#fff',
     },
     buttonText: {
         textAlign: 'center'

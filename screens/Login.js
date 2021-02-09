@@ -58,19 +58,21 @@ export default class Login extends Component {
                     
                 </SafeAreaView>
                 
-                <View> 
+                <View style={styles.form}> 
+                    <Text style={styles.inputTitle}>Email Address</Text>
                     <TextInput
+                        autoCapitalize="none"
                         style={styles.input}
-                        placeholder={'Email'}
                         value={this.state.email}
                         onChangeText={(val) => this.updateInput(val, 'email')}
                     />    
                 </View>
 
-                <View>
+                <View style={styles.form}>
+                <Text style={styles.inputTitle}>Password</Text>
                     <TextInput
+                        autoCapitalize="none"
                         style={styles.input}
-                        placeholder={'Password'}
                         value={this.state.password}
                         onChangeText={(val) => this.updateInput(val, 'password')}
                         secureTextEntry={true}
@@ -91,7 +93,7 @@ export default class Login extends Component {
                         <TouchableOpacity 
                         activeOpacity = {.5}
                         onPress={() => this.props.navigation.navigate("Registration")}>
-                            <Text style = {styles.registerText}>Register Here</Text> 
+                            <Text style = {styles.register}>Register Here</Text> 
                         </TouchableOpacity>    
                 </View>
                 
@@ -117,11 +119,13 @@ const styles = StyleSheet.create({
     logoContainer:{
         marginTop: 50,
         marginBottom: 60,
+        marginLeft: 25,
         alignItems: 'center',
         width:360,
-        
-        
-        
+    },
+    form: {
+        marginBottom: 48,
+        marginHorizontal: 30
     },
     logoText:{
         color: 'black',
@@ -130,25 +134,27 @@ const styles = StyleSheet.create({
         marginTop: 10,
         opacity: 0.5
     },
+    inputTitle:{
+        color: "#8A8F9E",
+        textTransform: "uppercase", 
+    },
     input:{
-        width: WIDTH - 55,
-        height: 45,
-        borderRadius: 25,
-        fontSize: 16,
-        paddingLeft: 45,
-        backgroundColor: '#F5B0C2',
-        borderColor: '#fff',
-        marginHorizontal: 25,
-        marginTop: 20,
-        
+        borderBottomColor: "#8A8F9E",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        height: 40,
+        fontSize: 15,
+        color: "#161F3D"
     },
     registerText:{
         marginTop: 10,
-        fontSize: 10
+        marginBottom: 5,
+        fontSize: 10,
+        color: "#8A8F9E",
+        textTransform: "uppercase" 
     },
-    registerText:{
-        marginTop: 10,
-        fontSize: 10
+    register:{
+        color: "#E9446A",
+        fontSize: 13
     },
     createAccountButton: {
         alignItems: 'center',
@@ -164,6 +170,16 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
     },
     buttonText: {
-        textAlign: 'center'
+        textAlign: 'center',
+        textTransform: "uppercase" 
+    },
+    errorMessage: {
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: 30
+    },
+    error: {
+        color: "#FF0000",
+        textAlign: "center"
     }
 });

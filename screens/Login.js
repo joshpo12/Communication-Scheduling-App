@@ -85,7 +85,7 @@ export default class Login extends Component {
                         activeOpacity = {.5}
                         onPress = {() => this.login()}
                         >
-                            <Text sytle = {styles.buttonText}> Log In</Text>
+                            <Text style = {styles.buttonText}> Log In</Text>
                     </TouchableOpacity>
                     </View>
                 <View alignItems='center'>
@@ -171,7 +171,6 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         textAlign: 'center',
-        textTransform: "uppercase" 
     },
     errorMessage: {
         alignItems: "center",

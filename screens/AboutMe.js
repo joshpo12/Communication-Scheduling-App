@@ -8,6 +8,9 @@ import { StackNavigator } from 'react-navigation'
 const {width:WIDTH} = Dimensions.get('window')
 
 export default class AboutMe extends Component {
+    static navigationOptions = {
+        title: 'About Me'
+    };
 
     render() {
         const { navigate } = this.props.navigation;
@@ -23,7 +26,8 @@ export default class AboutMe extends Component {
                     <Text style={styles.name}>Junior, Lincoln Northeast</Text>
                     <Text style={styles.bio}>I am the Development Manager of the Lincoln GOLD Senior Design Project. I enjoy working on this project.</Text>
                     <View>
-                        <TouchableOpacity style={styles.editProfileBtn} activeOpacity = {.5} onPress={buttonPressed}>
+                        <TouchableOpacity style={styles.editProfileBtn} activeOpacity = {.5} 
+                        onPress={()=>this.props.navigation.navigate("EditProfile")}>
                             <Text style={styles.buttonText}>Edit Profile</Text>
                         </TouchableOpacity>
                     </View>

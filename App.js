@@ -14,6 +14,7 @@ import Registration from './screens/Registration'
 import Scheduling from './screens/Scheduling'
 import Messager from './screens/messager'
 import Main from './screens/MainPage'
+import EditProfile from './screens/EditProfile'
 
 // const DrawerNavigator = createDrawerNavigator({
 //     AnimatedLoader: { screen: AnimatedLoader },
@@ -47,6 +48,7 @@ const LogInStack = () => {
         <Stack.Navigator>
             <Stack.Screen name="AboutMe" component={AboutMe}
                 options={{gestureEnabled:false, headerLeft: null}}/>
+            <Stack.Screen name="EditProfile" component={EditProfile}/>
         </Stack.Navigator>
     );
 }
@@ -57,7 +59,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Drawer.Navigator>
-                <Drawer.Screen name="Login" component={IntroScreens} 
+                <Drawer.Screen name="Login" component={LogInStack} 
                     options={{swipeEnabled:false, drawerLabel:""}}/>
                 <Drawer.Screen name="Main" component={LogInStack} />
             </Drawer.Navigator>

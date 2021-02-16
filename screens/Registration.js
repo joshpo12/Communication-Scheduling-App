@@ -1,3 +1,4 @@
+import { firestore } from 'firebase';
 import React, { Component, useState } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, BackHandler, Button, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -28,11 +29,13 @@ export default class Registration extends Component {
         this.setState(state);
     }
 
+    //function to register a new user as well as add that user to a collection
     register = () => {
         if(this.state.email === '' && this.state.password === '') {
             Alert.alert('Enter details to signup.')
         } else {
             this.setState({isLoading: true})
+            firestore().collection('Users').add({ name: this.state.userName });
             firebase.auth()
             .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((res) => {
@@ -50,7 +53,6 @@ export default class Registration extends Component {
             })
             .catch(error => this.setState({errorMessage: error.message }))
             
-            //this.props.navigation.navigate('Main')
         }
     }
 
@@ -108,14 +110,6 @@ export default class Registration extends Component {
         );
     }
 }
-
-/*const buttonPressed = () => {
-    Alert.alert(
-        "Button has been pressed!",
-        "You have pressed the button!"
-        )
-        
-}*/
 
 const styles = StyleSheet.create({
     backgroundContainer: {

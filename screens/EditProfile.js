@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput
 import logo from '../assets/goldicon.png';
 import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import firebase from '../database/firebase.js';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -11,11 +12,17 @@ export default class EditProfile extends Component {
         super();
 
         this.state = {
-        name: '',
-        school: '',
-        schoolYear: '',
-        bio: ''
+        name: 'default name',
+        school: 'default school',
+        schoolYear: 'default year',
+        bio: 'yare yare daze'
     };
+    }
+
+    updateText = (val, prop) => {
+        const state = this.state;
+        state[prop] = val;
+        this.setState(state);
     }
     
 
@@ -31,7 +38,7 @@ export default class EditProfile extends Component {
                     <TextInput
                         style={styles.input}
                         value={this.state.name}
-                        onChangeText={(val) => this.updateInput(val, 'name')}
+                        onChangeText={(val) => this.updateText(val, 'name')}
                     />    
                 </View>
 
@@ -41,8 +48,22 @@ export default class EditProfile extends Component {
                         autoCapitalize="none"
                         style={styles.input}
                         value={this.state.school}
-                        onChangeText={(val) => this.updateInput(val, 'school')}
+                        onChangeText={(val) => this.updateText(val, 'school')}
                     />
+                </View>
+                <View>
+                    <DropDownPicker
+                        items = {[
+                            {label: 'Freshman', value: 'freshman'},
+                            {label: 'Sophomore', value: 'sophomore'},
+                            {label: 'Junior', value: 'junior'},
+                            {label: 'Senior', value: 'senior'},
+                            {label: 'Other', value: 'other'},
+                        ]}
+                        placeholder = "Please select your grade level"
+                        containerStyle={styles.dropContainer}
+                        style = {styles.dropDown}
+                        />
                 </View>
                 <View>
                     <TouchableOpacity
@@ -57,12 +78,6 @@ export default class EditProfile extends Component {
             </TouchableWithoutFeedback>
         )
     }
-}
-
-const updateInput = (val, prop) => {
-    const state = this.state;
-    state[prop] = val;
-    this.setState(state);
 }
 
 const buttonPressed = () => {
@@ -162,4 +177,18 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "#161F3D"
     },
+    dropDown:{
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        marginTop: 2,
+    },
+    dropContainer:{
+        height: 40,
+        width: 360,
+        paddingHorizontal: 20,
+        marginBottom: 20,
+        alignContent: 'center',
+        
+    }
+
 });

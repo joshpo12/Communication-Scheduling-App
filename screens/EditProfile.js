@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput
 import logo from '../assets/goldicon.png';
 import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import firebase from '../database/firebase.js';
-import DropDownPicker from 'react-native-dropdown-picker';
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -25,10 +24,9 @@ export default class EditProfile extends Component {
         this.setState(state);
     }
     
-
     render() {
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={true}>
                 <View>
                     <Text style = {styles.headerTitle}>Edit profile</Text>
                 </View>
@@ -51,25 +49,31 @@ export default class EditProfile extends Component {
                         onChangeText={(val) => this.updateText(val, 'school')}
                     />
                 </View>
-                <View>
-                    <DropDownPicker
-                        items = {[
-                            {label: 'Freshman', value: 'freshman'},
-                            {label: 'Sophomore', value: 'sophomore'},
-                            {label: 'Junior', value: 'junior'},
-                            {label: 'Senior', value: 'senior'},
-                            {label: 'Other', value: 'other'},
-                        ]}
-                        placeholder = "Please select your grade level"
-                        containerStyle={styles.dropContainer}
-                        style = {styles.dropDown}
-                        />
+
+                <View style = {styles.form}>
+                    <Text style = {styles.inputTitle}>School Year</Text>
+                        <TextInput
+                            autoCapitalize = "none"
+                            style = {styles.input}
+                            value = {this.state.schoolYear}
+                            onChangeText = {(val) => this.updateText(val,'schoolYear')}
+                            />
+                    
+                </View>
+
+                <View style = {styles.form}>
+                    <Text style = {styles.inputTitle}>Bio</Text>
+                        <TextInput
+                            style = {styles.bio}
+                            multiline = {true}
+                            />
+                    
                 </View>
                 <View>
                     <TouchableOpacity
                         style = {styles.editProfileBtn}
                         activeOpacity = {.5}
-                        onPress = {buttonPressed}
+                        onPress = {() => this.props.navigation.navigate("AboutMe")}
                         >
                             <Text style = {styles.buttonText}>Save</Text>
                     </TouchableOpacity>
@@ -177,18 +181,14 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "#161F3D"
     },
-    dropDown:{
-        paddingHorizontal: 20,
-        alignItems: 'center',
-        marginTop: 2,
-    },
-    dropContainer:{
-        height: 40,
-        width: 360,
-        paddingHorizontal: 20,
-        marginBottom: 20,
-        alignContent: 'center',
-        
+    bio:{
+        height:80,
+        borderColor: "#8A8F9E",
+        borderWidth: StyleSheet.hairlineWidth,
+        fontSize: 15,
+        color: "#161F3D",
+        alignContent: 'flex-start'
+
     }
 
 });

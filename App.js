@@ -12,9 +12,13 @@ import AuctionForm from './screens/Auction_Form'
 import SubmitAssignment from './screens/SubmitAssignment'
 import Registration from './screens/Registration'
 import Scheduling from './screens/Scheduling'
-import Messager from './screens/messager'
+import Messenger from './messenger_module/Messenger'
 import Main from './screens/MainPage'
+import NewMessage from './messenger_module/NewMessage'
+import Chat from './messenger_module/Chat'
+import { IconButton } from 'react-native-paper';
 import EditProfile from './screens/EditProfile';
+
 
 // const DrawerNavigator = createDrawerNavigator({
 //     AnimatedLoader: { screen: AnimatedLoader },
@@ -30,6 +34,9 @@ import EditProfile from './screens/EditProfile';
 
 
 const Stack = createStackNavigator();
+
+const ChatStack = createStackNavigator();
+const NewMessageStack = createStackNavigator();
 
 const IntroScreens = () => {
     return(
@@ -53,6 +60,15 @@ const LogInStack = () => {
     );
 }
 
+const MessengerStack = () => {
+    return(
+        <NewMessageStack.Navigator mode='modal' headerMode='none'>
+            <NewMessageStack.Screen name='Chat' component={chat} />
+            <NewMessageStack.Screen name='NewMessage' component={NewMessage} />
+        </NewMessageStack.Navigator>
+    );
+}
+
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -62,8 +78,40 @@ export default function App() {
                 <Drawer.Screen name="Login" component={IntroScreens} 
                     options={{swipeEnabled:false, drawerLabel:""}}/>
                 <Drawer.Screen name="Main" component={LogInStack} />
+                <Drawer.Screen name="Messenger" component={MessengerStack} />
             </Drawer.Navigator>
         </NavigationContainer>
+    );
+}
+
+const chat = () => {
+    return(
+        <ChatStack.Navigator
+            screenOptions={{
+                headerStyle: { backgroundColor: '#F5B0C2'},
+                headerTintColor: '#ffffff',
+                headerTitleStyle: { fontSize: 22 }
+            }}>
+            <ChatStack.Screen 
+                name='Messenger' 
+                component={Messenger}
+                options={({ navigation }) => ({
+                    headerRight: () => (
+                        <IconButton
+                            icon = 'message-plus'
+                            size = {28}
+                            color = '#ffffff'
+                            onPress = {() => navigation.navigate('NewMessage')}/>
+                    )
+                })}
+            />
+            <ChatStack.Screen name='ChatRoom' component={Chat}
+            options={({ route }) => ({
+                title: route.params.thread.name
+            })} />
+        </ChatStack.Navigator>
+            
+
     );
 }
 

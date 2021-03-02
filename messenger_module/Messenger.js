@@ -4,17 +4,22 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { IconButton, Title, List, Divider } from 'react-native-paper';
 import { firestore } from 'firebase';
 import Loading from '../assets/Loading';
+import firebase from '../database/firebase.js';
 
 const {width:WIDTH} = Dimensions.get('window')
 
 export default function Messenger({navigation}) {
+    //variables to hold current state value 
     const [chats, setChats] = useState([]);
     const [loading, setLoading] = useState(true);
+    const currentUser = firebase.auth().currentUser;
 
+    //hook(allows you to use state and other React features) in our case here it's
+    //used to call the chat collection from firebase 
     useEffect(() => {
         const unsubscribe = firestore()
-        .collection('chat')
-        .orderBy('latestMessage.createdAt', 'desc')
+        .collection('chat').where('members', 'array-contains', currentUser.uid )
+        //.orderBy('latestMessage.createdAt', 'desc')
         .onSnapshot(querySnapshot => {
             const chats = querySnapshot.docs.map(documentSnapshot => {
                 return {

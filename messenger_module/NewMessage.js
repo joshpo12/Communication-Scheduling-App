@@ -1,20 +1,113 @@
 import React, { Component, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, BackHandler, Button, Alert, FlatList } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, BackHandler, Button, Alert, FlatList, ActivityIndicatorComponent } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { IconButton, Title, List, Divider } from 'react-native-paper';
 import { firestore } from 'firebase';
+import firebase from '../database/firebase.js';
 import Loading from '../assets/Loading';
 
 const {width:WIDTH} = Dimensions.get('window')
 
-export default function NewMessage() {
-    const [users, setUsers] = useState([]);
+export default function NewMessage({ navigation }) {
+    const currentUser = firebase.auth().currentUser;
+
+    const [room, setRoom] = useState('');
     const [loading, setLoading] = useState(true);
 
+    //hook to access Users collection
+    //similar structure to hook in Messenger class
     useEffect(() => {
-        this.retrieveData();
-        this.userData();
-    },[]);
+        const unsubscribe = firestore()
+        .collection('Users')
+        .onSnapshot(querySnapshot => {
+            const room = querySnapshot.docs.map(documentSnapshot => {
+                return {
+                    _id: documentSnapshot.id,
+                    name: '',
+                    ...documentSnapshot.data()
+                };
+            });
+
+            setRoom(room);
+
+            if(loading) {
+                setLoading(false);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    if(loading) {
+        return <Loading />;
+    }
+
+    //creates a new chat room with the current user and the other chat user chosen
+    function handleButtonPress(userID){
+
+        if(currentUser.uid < userID){
+            const roomID = currentUser.uid + userID;
+
+            //creates a document within the chat collection setting the chat room name as document name
+            firestore().collection('chat').doc(roomID)
+        .set({
+            name: roomID,
+            members: [currentUser.uid, userID]
+        })
+        .then(() => {
+            navigation.goBack();
+        });
+
+        } else {
+            const roomID = userID + currentUser.uid;
+
+            firestore().collection('chat').doc(roomID)
+        .set({
+            name: roomID,
+            members: [currentUser.uid, userID]
+        })
+        .then(() => {
+            navigation.goBack();
+        });
+        }
+    }
+
+    return(
+    
+        <View style = {styles.rootContainer}>
+        <View style={styles.closeButtonContainer}>
+            <IconButton
+                icon='close-circle'
+                size={36}
+                color='#664633'
+                onPress={() => navigation.goBack()}
+            />
+        </View>
+
+        <View style={styles.listContainer}>
+        <FlatList
+            data={room}
+            keyExtractor={item => item._id}
+            ItemSeparatorComponent={() => <Divider />}
+            renderItem={({item}) => (
+                <TouchableOpacity
+                    onPress={() => handleButtonPress(item._id)}
+                >
+                <List.Item
+                    title={item.name}
+                    description={item.email}
+                    titleNumberOfLines={1}
+                    titleStyle={styles.listTitle}
+                    descriptionStyle={styles.listDescription}
+                    descriptionNumberOfLines={1}
+                />
+                </TouchableOpacity>
+            )}
+        />
+        </View>
+        </View>
+    
+    );
 
 }
 
@@ -129,6 +222,10 @@ const styles = StyleSheet.create({
     
       listDescription: {
         fontSize: 16
-      }
+      },
+
+    listContainer: {
+        marginTop: 50
+    }
 
 });

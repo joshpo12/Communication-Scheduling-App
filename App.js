@@ -84,6 +84,7 @@ export default function App() {
     );
 }
 
+//stack navigator to handle the messenger components 
 const chat = () => {
     return(
         <ChatStack.Navigator

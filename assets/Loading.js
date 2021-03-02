@@ -1,3 +1,5 @@
+//Loading class used to handle backend loading when calling collections
+
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 

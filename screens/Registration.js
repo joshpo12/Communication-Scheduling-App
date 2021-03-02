@@ -35,10 +35,20 @@ export default class Registration extends Component {
             Alert.alert('Enter details to signup.')
         } else {
             this.setState({isLoading: true})
-            firestore().collection('Users').add({ name: this.state.userName });
             firebase.auth()
             .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((res) => {
+                //adds a user to the Users collection 
+                const currentUser = firebase.auth().currentUser
+                firestore().collection('Users').doc(currentUser.uid).set({
+                    name: this.state.userName,
+                    email: this.state.email,
+                    _id: currentUser.uid
+                });
+                //updates the members in Lincoln GOLD Announcements chat to add the new user
+                firestore().collection('chat').doc('fMwWgGc2Ws72obbW9qeC').update({
+                    members: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+                });
                 res.user.updateProfile({
                     userName: this.state.userName
                 })
@@ -49,10 +59,11 @@ export default class Registration extends Component {
                     email: '',
                     password: ''
                 })
-                this.props.navigation.navigate('Main')
+                //this.props.navigation.navigate('Main')
             })
             .catch(error => this.setState({errorMessage: error.message }))
             
+            this.props.navigation.navigate('Main')
         }
     }
 

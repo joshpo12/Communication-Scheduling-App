@@ -40,6 +40,8 @@ export default function Chat({route}) {
             );
     }
 
+    //hook to access the messages within the chosen chat room 
+    //similar structure to hook in Messenger class
     useEffect(() => {
         const messageListener = firestore().collection('chat')
             .doc(thread._id)

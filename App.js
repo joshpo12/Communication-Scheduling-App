@@ -16,8 +16,9 @@ import Messenger from './messenger_module/Messenger'
 import Main from './screens/MainPage'
 import NewMessage from './messenger_module/NewMessage'
 import Chat from './messenger_module/Chat'
-
 import { IconButton } from 'react-native-paper';
+import EditProfile from './screens/EditProfile';
+
 
 // const DrawerNavigator = createDrawerNavigator({
 //     AnimatedLoader: { screen: AnimatedLoader },
@@ -54,6 +55,7 @@ const LogInStack = () => {
         <Stack.Navigator>
             <Stack.Screen name="AboutMe" component={AboutMe}
                 options={{gestureEnabled:false, headerLeft: null}}/>
+            <Stack.Screen name = "EditProfile" component = {EditProfile}/>
         </Stack.Navigator>
     );
 }

@@ -1,9 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 54391,
-  "expoServerNgrokUrl": "https://ms-6fi.knguyen32.scheduling-app-mobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.ms-6fi.knguyen32.scheduling-app-mobile.exp.direct",
-  "ngrokPid": 54423
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
+  "webpackServerPort": null
 }

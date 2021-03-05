@@ -3,12 +3,20 @@ import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Button, Alert,
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import profilepic from '../assets/profilepic.png';
 import { StackNavigator } from 'react-navigation'
-
+import firebase from '../database/firebase.js'
 
 const {width:WIDTH} = Dimensions.get('window')
 
 export default class AboutMe extends Component {
-
+    static navigationOptions = {
+        title: 'About Me'
+    };
+    state = {
+        name: "default name",
+        school: "default school",
+        schoolYear: "default year",
+        bio: "yare yare daze"
+    };
     render() {
         const { navigate } = this.props.navigation;
         return(
@@ -19,11 +27,12 @@ export default class AboutMe extends Component {
                     <Image source={profilepic}/>   
                 </SafeAreaView>
                 <View>
-                    <Text style={styles.name}>Kevin Nguyen</Text>
-                    <Text style={styles.name}>Junior, Lincoln Northeast</Text>
-                    <Text style={styles.bio}>I am the Development Manager of the Lincoln GOLD Senior Design Project. I enjoy working on this project.</Text>
+                    <Text style={styles.name}>{this.state.name}</Text>
+                    <Text style={styles.name}>{this.state.schoolYear}, {this.state.school}</Text>
+                    <Text style={styles.bio}>{this.state.bio}</Text>
                     <View>
-                        <TouchableOpacity style={styles.editProfileBtn} activeOpacity = {.5} onPress={buttonPressed}>
+                        <TouchableOpacity style={styles.editProfileBtn} activeOpacity = {.5} 
+                        onPress={()=>this.props.navigation.navigate("EditProfile")}>
                             <Text style={styles.buttonText}>Edit Profile</Text>
                         </TouchableOpacity>
                     </View>

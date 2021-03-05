@@ -1,7 +1,9 @@
+import { firestore } from 'firebase';
 import React, { Component, useState } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, BackHandler, Button, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import logo from '../assets/goldicon.png'
+import logo from '../assets/goldicon.png';
+import firebase from '../database/firebase.js';
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -9,6 +11,62 @@ export default class Registration extends Component {
     static navigationOptions = {
         title: 'Registration', 
     };
+
+    constructor() {
+        super();
+        this.state = {
+            userName: '',
+            email: '',
+            password: '',
+            isLoading: false
+        }
+    }
+
+    //takes in user input and updates the registration values
+    updateInput = (val, prop) => {
+        const state = this.state;
+        state[prop] = val;
+        this.setState(state);
+    }
+
+    //function to register a new user as well as add that user to a collection
+    register = () => {
+        if(this.state.email === '' && this.state.password === '') {
+            Alert.alert('Enter details to signup.')
+        } else {
+            this.setState({isLoading: true})
+            firebase.auth()
+            .createUserWithEmailAndPassword(this.state.email, this.state.password)
+            .then((res) => {
+                //adds a user to the Users collection 
+                const currentUser = firebase.auth().currentUser
+                firestore().collection('Users').doc(currentUser.uid).set({
+                    name: this.state.userName,
+                    email: this.state.email,
+                    _id: currentUser.uid
+                });
+                //updates the members in Lincoln GOLD Announcements chat to add the new user
+                firestore().collection('chat').doc('fMwWgGc2Ws72obbW9qeC').update({
+                    members: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+                });
+                res.user.updateProfile({
+                    userName: this.state.userName
+                })
+                console.log('User registered successfully!')
+                this.setState({
+                    isLoading: false,
+                    userName: '',
+                    email: '',
+                    password: ''
+                })
+                //this.props.navigation.navigate('Main')
+            })
+            .catch(error => this.setState({errorMessage: error.message }))
+            
+            this.props.navigation.navigate('Main')
+        }
+    }
+
 
     render() {
         const { navigation } = this.props.navigation;
@@ -20,43 +78,32 @@ export default class Registration extends Component {
                     
                 </SafeAreaView>
                 
-                <View>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Name</Text>
                     <TextInput
+                        autoCapitalize="none"
                         style={styles.input}
-                        placeholder={'First Name'}
-                        placeholderTextColor='white'
+                        value = {this.state.userName}
+                        onChangeText={(val) => this.updateInput(val, 'userName')}
                     />    
                 </View>
 
-                <View>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Email Address</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder={'Last Name'}
-                        placeholderTextColor='white'
+                        value = {this.state.email}
+                        onChangeText={(val) => this.updateInput(val, 'email')}
                     />    
                 </View>
 
-                <View>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Password</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder={'Email Address'}
-                        placeholderTextColor='white'
-                    />    
-                </View>
-
-                <View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={'Password'}
-                        placeholderTextColor='white'
-                    />    
-                </View>
-
-                <View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={'Confirm password'}
-                        placeholderTextColor='white'
+                        value = {this.state.password}
+                        onChangeText={(val) => this.updateInput(val, 'password')}
+                        secureTextEntry={true}
                     />    
                 </View>
 
@@ -64,7 +111,7 @@ export default class Registration extends Component {
                     <TouchableOpacity
                         style = {styles.createAccountButton}
                         activeOpacity = {.5}
-                        onPress = {buttonPressed}
+                        onPress = {() => this.register()}
                         >
                             <Text style = {styles.buttonText}> Create Account</Text>
                     </TouchableOpacity>
@@ -75,13 +122,6 @@ export default class Registration extends Component {
     }
 }
 
-const buttonPressed = () => {
-    Alert.alert(
-        "Button has been pressed!",
-        "You have pressed the button!"
-        )
-        
-}
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,
@@ -91,13 +131,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logoContainer:{
-        marginTop: 25,
-        marginBottom: 25,
+        marginTop: 50,
+        marginBottom: 60,
+        marginLeft: 25,
         alignItems: 'center',
         width:360,
-        
-        
-        
+    },
+    form: {
+        marginBottom: 48,
+        marginHorizontal: 30
     },
     logoText:{
         color: 'black',
@@ -106,18 +148,18 @@ const styles = StyleSheet.create({
         marginTop: 10,
         opacity: 0.5
     },
-    input:{
-        width: WIDTH - 55,
-        height: 45,
-        borderRadius: 25,
-        fontSize: 16,
-        paddingLeft: 45,
-        backgroundColor: 'gray',
-        color: 'white',
-        marginHorizontal: 25,
-        marginTop: 10.5,
-        marginBottom: 10.5
+    inputTitle:{
+        color: "#8A8F9E",
+        textTransform: "uppercase", 
     },
+    input:{
+        borderBottomColor: "#8A8F9E",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        height: 40,
+        fontSize: 15,
+        color: "#161F3D"
+    },
+    
     registerText:{
         color: 'blue',
         marginTop: 10,
@@ -125,15 +167,16 @@ const styles = StyleSheet.create({
     },
     createAccountButton: {
         alignItems: 'center',
-        marginTop: 10,
-        paddingTop: 15,
-        paddingBottom: 15,
+        marginTop: 15,
+        marginBottom: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
         marginLeft: 145,
         marginRight: 145,
         backgroundColor: '#F5B0C2',
         borderRadius: 30,
-        borderWidth: 1,
-        borderColor: '#777777',
+        
+        borderColor: '#fff',
     },
     buttonText: {
         textAlign: 'center'

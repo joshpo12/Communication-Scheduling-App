@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lincolngold.mobileapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

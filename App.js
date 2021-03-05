@@ -4,7 +4,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
 import Login from './screens/Login';
 import AnimatedLoader from './screens/AnimatedLoader'
 import AboutMe from './screens/AboutMe'
@@ -78,6 +77,10 @@ export default function App() {
                 <Drawer.Screen name="Login" component={IntroScreens} 
                     options={{swipeEnabled:false, drawerLabel:""}}/>
                 <Drawer.Screen name="Main" component={LogInStack} />
+                <Drawer.Screen name="My Profile" component={AboutMe} />
+                <Drawer.Screen name="Scheduling" component={Scheduling} />
+                <Drawer.Screen name="Auction" component={AuctionForm} />
+                <Drawer.Screen name="Submit Assignments" component={SubmitAssignment} />
                 <Drawer.Screen name="Messenger" component={MessengerStack} />
             </Drawer.Navigator>
         </NavigationContainer>

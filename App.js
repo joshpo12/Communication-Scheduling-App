@@ -7,7 +7,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Login from './screens/Login';
 import AnimatedLoader from './screens/AnimatedLoader'
 import AboutMe from './screens/AboutMe'
-import AuctionForm from './screens/Auction_Form'
+import Auction from './auction_module/Auction';
 import SubmitAssignment from './screens/SubmitAssignment'
 import Registration from './screens/Registration'
 import Scheduling from './screens/Scheduling'
@@ -79,7 +79,7 @@ export default function App() {
                 <Drawer.Screen name="Main" component={LogInStack} />
                 <Drawer.Screen name="My Profile" component={AboutMe} />
                 <Drawer.Screen name="Scheduling" component={Scheduling} />
-                <Drawer.Screen name="Auction" component={AuctionForm} />
+                <Drawer.Screen name="Submit Silent Auction Item" component={Auction} />
                 <Drawer.Screen name="Submit Assignments" component={SubmitAssignment} />
                 <Drawer.Screen name="Messenger" component={MessengerStack} />
             </Drawer.Navigator>

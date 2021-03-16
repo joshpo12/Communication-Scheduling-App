@@ -17,6 +17,9 @@ import NewMessage from './messenger_module/NewMessage'
 import Chat from './messenger_module/Chat'
 import { IconButton } from 'react-native-paper';
 import EditProfile from './screens/EditProfile';
+import AddEvent from './scheduler_module/AddEvent';
+import ShowEvent from './scheduler_module/ShowEvent';
+import EventCalendar from './scheduler_module/EventCalendar';
 
 
 // const DrawerNavigator = createDrawerNavigator({
@@ -36,6 +39,7 @@ const Stack = createStackNavigator();
 
 const ChatStack = createStackNavigator();
 const NewMessageStack = createStackNavigator();
+const NewSchedulerStack = createStackNavigator();
 
 const IntroScreens = () => {
     return(
@@ -68,6 +72,16 @@ const MessengerStack = () => {
     );
 }
 
+const SchedulerStack = () => {
+    return(
+        <NewSchedulerStack.Navigator name='modal' headerMode='none'>
+                <NewSchedulerStack.Screen name='Agenda' component={EventCalendar} />
+                <NewSchedulerStack.Screen name='AddEvent' component={AddEvent} />
+                <NewSchedulerStack.Screen name='ShowEvent' component={ShowEvent} />
+        </NewSchedulerStack.Navigator>
+    )
+}
+
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -80,8 +94,9 @@ export default function App() {
                 <Drawer.Screen name="My Profile" component={AboutMe} />
                 <Drawer.Screen name="Scheduling" component={Scheduling} />
                 <Drawer.Screen name="Auction" component={AuctionForm} />
-                <Drawer.Screen name="Submit Assignments" component={SubmitAssignment} />
+                {/* <Drawer.Screen name="Submit Assignments" component={SubmitAssignment} /> */}
                 <Drawer.Screen name="Messenger" component={MessengerStack} />
+                <Drawer.Screen name="Scheduler" component={SchedulerStack} />
             </Drawer.Navigator>
         </NavigationContainer>
     );

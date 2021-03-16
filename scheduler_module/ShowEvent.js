@@ -21,7 +21,8 @@ export default function ShowEvent({route, navigation}) {
                     return {
                         _id: documentSnapshot.id,
                         eventName: '',
-                        dateAndTime: '',
+                        eventTime: '',
+                        rsvpCount: '',
                     ...documentSnapshot.data()
                     }
                 });
@@ -50,7 +51,7 @@ export default function ShowEvent({route, navigation}) {
             >
               <View>
                 <View style={{backgroundColor: "000000aa", margin: 50, padding: 40, borderRadius: 10}}>
-                <Text>Hello World!</Text>
+                <Text style={styles.title}>Events on {chosenDay}</Text>
                 <FlatList
                     data={events}
                     keyExtractor={item => item._id}
@@ -59,11 +60,11 @@ export default function ShowEvent({route, navigation}) {
                     <List.Item
                         onPress={handleRSVP}
                         title={item.eventName}
-                        description={item.eventDate}
+                        description={item.eventTime}                        
                         // titleNumberOfLines={1}
                         // titleStyle={styles.listTitle}
                         // descriptionStyle={styles.listDescription}
-                        // descriptionNumberOfLines={1}
+                        descriptionNumberOfLines={2}
                     />
                     )}
                 />
@@ -75,3 +76,10 @@ export default function ShowEvent({route, navigation}) {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 25,
+    textAlign: 'center' 
+  }
+})

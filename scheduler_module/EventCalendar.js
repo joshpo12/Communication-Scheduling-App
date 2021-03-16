@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Button, Modal, FlatList, DateObject } from 'react-native';
+import { View, StyleSheet, Text, Button, FlatList } from 'react-native';
 import { List, Divider } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
-import t from 'tcomb-form-native';
 import { firestore } from 'firebase';
-import { firebase } from '../database/firebase';
-import { Header } from 'react-native/Libraries/NewAppScreen';
 
 export default function EventCalendar({navigation}) {
-
-    const selectedDay = new Date();
 
     const [events, setEvents] = useState([]);
 
@@ -21,7 +16,9 @@ export default function EventCalendar({navigation}) {
                     return {
                         _id: documentSnapshot.id,
                         eventName: '',
-                        dateAndTime: '',
+                        eventDate: '',
+                        eventTime: '',
+                        rsvpCount: '',
                     ...documentSnapshot.data()
                     }
                 });
@@ -30,26 +27,16 @@ export default function EventCalendar({navigation}) {
             return () => unsubscribe();
     }, []);
 
-    function getCurrentDate() {
-        var date = new Date().getDate();
-        var month = new Date().getMonth() + 1;
-        var year = new Date().getFullYear();
-        //Alert.alert(date + '-' + month + '-' + year);
-        // You can turn it in to your desired format
-        return date + '-' + month + '-' + year;//format: dd-mm-yyyy;
-    }
-
 return(
-    <View>
-        {/* Click on day and modal sorts by dateAndTime and displays events for that day, with option to RSVP for event */}
-        <Calendar 
-          onDayPress={(day) => {navigation.navigate('ShowEvent', { chosenDay: day.dateString }), console.log('selectedDay: ', day.dateString)}}
-        />
+    <View style={styles.topPadding}>
         <Button
           onPress={() => navigation.navigate('AddEvent')}
           title="Add New Event">
         </Button>
-        <Text>Upcoming Events: </Text>
+        <Calendar 
+          onDayPress={(day) => {navigation.navigate('ShowEvent', { chosenDay: day.dateString }), console.log('selectedDay: ', day.dateString)}}
+        />
+        <Text style={styles.upcomingEvents}>Upcoming Events: </Text>
         <FlatList
             data={events}
             keyExtractor={item => item._id}
@@ -57,7 +44,7 @@ return(
             renderItem={({item}) => (
               <List.Item
                   title={item.eventName}
-                  description={item.eventDate, item.eventTime}
+                  description={item.eventDate, item.eventTime, item.rsvpCount}
                   // titleNumberOfLines={1}
                   // titleStyle={styles.listTitle}
                   // descriptionStyle={styles.listDescription}
@@ -71,6 +58,14 @@ return(
 }
 
 const styles = StyleSheet.create({
+    topPadding: {
+      paddingTop: 50
+    },
+    upcomingEvents: {
+      fontSize: 25,
+      textAlign: 'center',
+      paddingTop: 20
+    },
     item: {
       backgroundColor: "white",
       flex: 1,

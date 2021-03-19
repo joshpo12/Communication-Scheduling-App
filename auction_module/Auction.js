@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Dimensions, Button, Alert, ScrollView } from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import { firestore } from 'firebase';
 
 const {width:WIDTH} = Dimensions.get('window')
@@ -53,8 +54,8 @@ export default function Auction({navigation}) {
             <View style={styles.top_padding}>
             <Text style={styles.headerText}>Submit a Silent Auction Item</Text>
                      
-                <View>
-                    <Text style={styles.input_description}>Silent Auction Item Name</Text>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Silent Auction Item Name</Text>
                     <TextInput
                         autoCapitalize='none'
                         required
@@ -64,8 +65,8 @@ export default function Auction({navigation}) {
                     />    
                 </View>
                 
-                <View>
-                    <Text style={styles.input_description}>Description of Package</Text>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Description of Package</Text>
                     <TextInput
                         autoCapitalize='none'
                         required
@@ -75,8 +76,8 @@ export default function Auction({navigation}) {
                     />  
                 </View>
                 
-                <View>
-                    <Text style={styles.input_description}>Value</Text>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Value</Text>
                     <TextInput
                         autoCapitalize='none'
                         required
@@ -86,8 +87,8 @@ export default function Auction({navigation}) {
                     />
                 </View>
                 
-                <View>
-                    <Text style={styles.input_description}>Donor Name</Text>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Donor Name</Text>
                     <TextInput
                         autoCapitalize='none'
                         required
@@ -97,8 +98,8 @@ export default function Auction({navigation}) {
                     />
                 </View>
                
-                <View>
-                    <Text style={styles.input_description}>Donor Organization</Text>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Donor Organization</Text>
                     <TextInput
                         autoCapitalize='none'
                         required
@@ -108,8 +109,8 @@ export default function Auction({navigation}) {
                     />
                 </View>
                 
-                <View>
-                    <Text style={styles.input_description}>Phone Number</Text>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Phone Number</Text>
                     <TextInput
                         autoCapitalize='none'
                         required
@@ -119,8 +120,8 @@ export default function Auction({navigation}) {
                     />
                 </View>
                 
-                <View>
-                    <Text style={styles.input_description}>Email Address</Text>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Email Address</Text>
                     <TextInput
                         autoCapitalize='none'
                         required
@@ -130,8 +131,8 @@ export default function Auction({navigation}) {
                     />
                 </View>
                 
-                <View>
-                    <Text style={styles.input_description}>Donor Address</Text>
+                <View style={styles.form}>
+                    <Text style={styles.inputTitle}>Donor Address</Text>
                     <TextInput
                         autoCapitalize='none'
                         required
@@ -139,8 +140,14 @@ export default function Auction({navigation}) {
                         value={donorAddress}
                         onChangeText={address => setDonorAddress(address)}
                     />
-                </View>
-                    <Button style={styles.submitFormButton} onPress={handleButtonPress} title="Submit Form"></Button>
+                </View >
+                    <TouchableOpacity
+                        style = {styles.submitFormButton}
+                        activeOpacity = {.5}
+                        onPress = {handleButtonPress}
+                        >
+                            <Text style = {styles.buttonText}> Submit</Text>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         );
@@ -153,21 +160,15 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 25,
         fontWeight: 'bold',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom: 35
     },
     input:{
-        width: WIDTH - 55,
-        height: 45,
-        borderRadius: 25,
-        fontSize: 16,
-        paddingLeft: 45,
-        backgroundColor: '#F5B0C2',
-        borderColor: '#777777',
-        borderWidth: 1,
-        color: 'black',
-        marginHorizontal: 25,
-        marginTop: 10.5,
-        marginBottom: 10.5
+        borderBottomColor: "#8A8F9E",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        height: 40,
+        fontSize: 15,
+        color: "#161F3D"
     },
     input_description:{
         paddingLeft: 45,
@@ -175,18 +176,26 @@ const styles = StyleSheet.create({
     },
     submitFormButton: {
         alignItems: 'center',
-        marginTop: 10,
-        marginBottom: 40,
-        paddingTop: 15,
-        paddingBottom: 15,
-        marginLeft: 130,
-        marginRight: 130,
+        marginTop: 15,
+        marginBottom: 70,
+        paddingTop: 10,
+        paddingBottom: 10,
+        marginLeft: 145,
+        marginRight: 145,
         backgroundColor: '#F5B0C2',
         borderRadius: 30,
-        borderWidth: 1,
+        
         borderColor: '#fff',
     },
     buttonText: {
         textAlign: 'center'
+    },
+    inputTitle:{
+        color: "#8A8F9E",
+        textTransform: "uppercase"
+    },
+    form: {
+        marginBottom: 48,
+        marginHorizontal: 30
     }
 });

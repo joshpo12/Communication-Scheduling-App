@@ -1,61 +1,79 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Button, Alert, AppRegistry } from 'react-native';
+import React, { Component, useEffect, useState, } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Button, Alert, AppRegistry, FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import profilepic from '../assets/profilepic.png';
 import { StackNavigator } from 'react-navigation'
+import { firestore } from 'firebase';
 import firebase from '../database/firebase.js'
+import { render } from 'react-dom';
+import { SegmentedControlIOSComponent } from 'react-native';
+import { List } from 'react-native-paper';
 
 const {width:WIDTH} = Dimensions.get('window')
 
-export default class AboutMe extends Component {
-    static navigationOptions = {
-        title: 'About Me'
-    };
-    state = {
-        name: "default name",
-        school: "default school",
-        schoolYear: "default year",
-        bio: "yare yare daze"
-    };
-    render() {
-        const { navigate } = this.props.navigation;
-        return(
-            <View style={styles.container}>
-                <Text style={styles.headerTitle}>Your Profile</Text>
-                <View style={styles.straightLine}/>
-                <SafeAreaView style={styles.logoContainer}>
-                    <Image source={profilepic}/>   
-                </SafeAreaView>
-                <View>
-                    <Text style={styles.name}>{this.state.name}</Text>
-                    <Text style={styles.name}>{this.state.schoolYear}, {this.state.school}</Text>
-                    <Text style={styles.bio}>{this.state.bio}</Text>
-                    <View>
-                        <TouchableOpacity style={styles.editProfileBtn} activeOpacity = {.5} 
-                        onPress={()=>this.props.navigation.navigate("EditProfile")}>
-                            <Text style={styles.buttonText}>Edit Profile</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.straightLine}/>
-                    <Text style={styles.userOnly}>Only You Can See</Text>
-                    <Text style={styles.yourDues}>Your Dues:</Text>
-                    <Text style={styles.dueAmt}>Remaining Due: $250</Text>
-                    <Text style={styles.yourDues}>Your Events:</Text>
-                    <Text style={styles.events}>November 3rd: Finance Class</Text>
-                    <Text style={styles.dueAmt}>4:30pm via Zoom - [zoom link here]</Text>
-                    <Text style={styles.events}>November 17th: Coping with Stress and Life</Text>
-                    <Text style={styles.dueAmt}>6:30pm via Zoom - [zoom link here]</Text>
-                </View>
-            </View>
-        )};
-};
+export default function AboutMe({navigation}) {
+    const currentUser = firebase.auth().currentUser;
+    const [profile, setProfile] = useState([]);
+    const docRef = firestore().collection('Users').where('_id', "==", currentUser.uid);
 
-const buttonPressed = () => {
-    Alert.alert(
-        "Button has been pressed!",
-        "You have pressed the button!"
-    )
-}
+    useEffect(() => {
+        const unsubscribe = docRef.onSnapshot((snapshot)=>{
+            const profileData = snapshot.docs.map((doc)=>({
+                _id: doc.id,
+                name: '',
+                school: '',
+                schoolYear: '',
+                bio: '',
+                ...doc.data(),
+            }));
+            setProfile(profileData);
+        });
+    }, []);
+
+    function buttonPressed() {
+        Alert.alert(
+            "Button has been pressed!",
+            "You have pressed the button!"
+        )
+    }
+console.log(profile);
+    return(
+        <View style={styles.container}>
+            <Text style={styles.headerTitle}>Your Profile</Text>
+            <View style={styles.straightLine}/>
+            <SafeAreaView style={styles.logoContainer}>
+                <Image source={profilepic}/>   
+            </SafeAreaView>
+            <View>
+                <FlatList
+                    data = {profile}
+                    keyExtractor = {item => item._id}
+                    renderItem = {({item}) => (
+                        <View>
+                            <Text style={styles.name}>{item.name}</Text>
+                            <Text style={styles.name}>{item.school} - {item.schoolYear}</Text>
+                            <Text style={styles.bio}>{item.bio}</Text>
+                        </View>
+                        )}
+                />
+                <View>
+                    <TouchableOpacity style={styles.editProfileBtn} activeOpacity = {.5} 
+                    onPress={()=> navigation.navigate('EditProfile')}>
+                        <Text style={styles.buttonText}>Edit Profile</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.straightLine}/>
+                <Text style={styles.userOnly}>Only You Can See</Text>
+                <Text style={styles.yourDues}>Your Dues:</Text>
+                <Text style={styles.dueAmt}>Remaining Due: $250</Text>
+                <Text style={styles.yourDues}>Your Events:</Text>
+                <Text style={styles.events}>November 3rd: Finance Class</Text>
+                <Text style={styles.dueAmt}>4:30pm via Zoom - [zoom link here]</Text>
+                <Text style={styles.events}>November 17th: Coping with Stress and Life</Text>
+                <Text style={styles.dueAmt}>6:30pm via Zoom - [zoom link here]</Text>
+            </View>
+        </View>
+    )};
 
 const styles = StyleSheet.create({
     container: {

@@ -92,8 +92,9 @@ const styles = StyleSheet.create({
     logoContainer:{
         marginTop: 50,
         marginBottom: 60,
+        marginLeft: 25,
         alignItems: 'center',
-        width:360,
+        width:360
     },
     logoText:{
         color: 'black',

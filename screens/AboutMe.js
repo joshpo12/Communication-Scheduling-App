@@ -1,13 +1,9 @@
-import React, { Component, useEffect, useState, } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Button, Alert, AppRegistry, FlatList } from 'react-native';
+import React, { useEffect, useState, } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Alert, FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import profilepic from '../assets/profilepic.png';
-import { StackNavigator } from 'react-navigation'
 import { firestore } from 'firebase';
 import firebase from '../database/firebase.js'
-import { render } from 'react-dom';
-import { SegmentedControlIOSComponent } from 'react-native';
-import { List } from 'react-native-paper';
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -24,10 +20,12 @@ export default function AboutMe({navigation}) {
                 school: '',
                 schoolYear: '',
                 bio: '',
+                email: '',
                 ...doc.data(),
             }));
             setProfile(profileData);
         });
+        return () => unsubscribe();
     }, []);
 
     function buttonPressed() {
@@ -52,6 +50,7 @@ console.log(profile);
                         <View>
                             <Text style={styles.name}>{item.name}</Text>
                             <Text style={styles.name}>{item.school} - {item.schoolYear}</Text>
+                            <Text style={styles.name}>{item.email}</Text>
                             <Text style={styles.bio}>{item.bio}</Text>
                         </View>
                         )}

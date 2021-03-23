@@ -1,87 +1,175 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, Alert, ScrollView, Keyboard } from 'react-native';
+import React, { Component, useEffect, useState, } from 'react';
+import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, Alert, ScrollView, Keyboard, FlatList } from 'react-native';
 import logo from '../assets/goldicon.png';
 import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import firebase from '../database/firebase.js';
+import { firestore } from 'firebase';
+
 
 const {width:WIDTH} = Dimensions.get('window')
 
-export default class EditProfile extends Component {
-    constructor() {
-        super();
+export default function EditProfile({navigation}) {
+    const currentUser = firebase.auth().currentUser;
 
-        this.state = {
-        name: 'default name',
-        school: 'default school',
-        schoolYear: 'default year',
-        bio: 'yare yare daze'
-    };
-    }
+    const [profile, setProfile] = useState([]);
+    const [updateName,setUpdateName] = useState();
+    const [updateSchool,setUpdateSchool] = useState();
+    const [updateYear,setUpdateYear] = useState();
+    //const [updateEmail,setUpdateEmail] = useState();
+    const [updateBio,setUpdateBio] = useState();
 
-    updateText = (val, prop) => {
-        const state = this.state;
-        state[prop] = val;
-        this.setState(state);
-    }
+    const docRef = firestore().collection('Users').where('_id', "==", currentUser.uid);
     
-    render() {
-        return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={true}>
-                <View>
-                    <Text style = {styles.headerTitle}>Edit profile</Text>
-                </View>
-                        
-                <View style={styles.form}> 
+    useEffect(() => {
+        const unsubscribe = docRef.onSnapshot((snapshot)=>{
+            const profileData = snapshot.docs.map((doc)=>({
+                _id: doc.id,
+                name: '',
+                school: '',
+                schoolYear: '',
+                //email: '',
+                bio: '',
+                ...doc.data(),
+            }));
+            setProfile(profileData);
+        });
+        return () => unsubscribe();
+    }, []);
+
+    function handleButtonPress() {
+        if(updateName) {
+            firestore().collection('Users').doc(currentUser.uid).update({
+                name: updateName
+            })
+        }
+        if(updateSchool) {
+            firestore().collection('Users').doc(currentUser.uid).update({
+                school: updateSchool
+            })
+        }
+        if(updateYear) {
+            firestore().collection('Users').doc(currentUser.uid).update({
+                schoolYear: updateYear
+            })
+        }
+        /*
+        if(updateEmail) {
+            firestore().collection('Users').doc(currentUser.uid).update({
+                email: updateEmail
+            })
+        }
+        */
+        if(updateBio) {
+            firestore().collection('Users').doc(currentUser.uid).update({
+                bio: updateBio
+            })
+        }
+        navigation.navigate("AboutMe");
+    }
+
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={true}>
+            <View>
+                <Text style = {styles.headerTitle}>Edit profile</Text>
+            </View>
+
+            <FlatList   
+                data = {profile}
+                keyExtractor = {item => item._id}
+                renderItem = {({item}) => (
+                    <View style={styles.form}> 
                     <Text style={styles.inputTitle}>Name</Text>
                     <TextInput
                         style={styles.input}
-                        value={this.state.name}
-                        onChangeText={(val) => this.updateText(val, 'name')}
+                        placeholder = {item.name}
+                        value = {updateName}
+                        onChangeText = {newName => setUpdateName(newName)}
                     />    
                 </View>
 
-                <View style={styles.form}>
-                <Text style={styles.inputTitle}>School</Text>
-                    <TextInput
-                        autoCapitalize="none"
-                        style={styles.input}
-                        value={this.state.school}
-                        onChangeText={(val) => this.updateText(val, 'school')}
-                    />
-                </View>
+                )}
+            /> 
 
-                <View style = {styles.form}>
-                    <Text style = {styles.inputTitle}>School Year</Text>
-                        <TextInput
-                            autoCapitalize = "none"
-                            style = {styles.input}
-                            value = {this.state.schoolYear}
-                            onChangeText = {(val) => this.updateText(val,'schoolYear')}
-                            />
-                    
-                </View>
+            <FlatList
+                data = {profile}
+                keyExtractor = {item => item._id}
+                renderItem = {({item}) => (
+                    <View style={styles.form}>
+                            <Text style={styles.inputTitle}>School</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder = {item.school}
+                                    value = {updateSchool}
 
-                <View style = {styles.form}>
-                    <Text style = {styles.inputTitle}>Bio</Text>
-                        <TextInput
-                            style = {styles.bio}
-                            multiline = {true}
-                            />
-                    
-                </View>
-                <View>
-                    <TouchableOpacity
-                        style = {styles.editProfileBtn}
-                        activeOpacity = {.5}
-                        onPress = {() => this.props.navigation.navigate("AboutMe")}
-                        >
-                            <Text style = {styles.buttonText}>Save</Text>
-                    </TouchableOpacity>
-                    </View>
-                
-            </TouchableWithoutFeedback>
-        )
-    }
+                                    onChangeText = {newSchool => setUpdateSchool(newSchool)}
+                                />
+                        </View>
+                )}
+            />  
+
+            <FlatList
+                data = {profile}
+                keyExtractor = {item => item._id}
+                renderItem = {({item}) => (
+                    <View style={styles.form}>
+                            <Text style={styles.inputTitle}>School Year</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder = {item.schoolYear}
+                                    value = {updateYear}
+                                    onChangeText = {newYear => setUpdateYear(newYear)}
+                                />
+                        </View>
+                )}
+            />  
+{/* Functionality to edit email has been removed to prevent issues with auth
+            <FlatList
+                data = {profile}
+                keyExtractor = {item => item._id}
+                renderItem = {({item}) => (
+                    <View style={styles.form}>
+                            <Text style={styles.inputTitle}>Email</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder = {item.email}
+                                    multiline = {true}
+                                    value = {updateEmail}
+                                    onChangeText = {newEmail=> setUpdateEmail(newEmail)}
+                                />
+                        </View>
+                )}
+            />   
+                */}
+
+            <FlatList
+                data = {profile}
+                keyExtractor = {item => item._id}
+                renderItem = {({item}) => (
+                    <View style={styles.boxForm}>
+                            <Text style={styles.inputTitle}>Bio</Text>
+                                <TextInput
+                                    style={styles.boxInput}
+                                    placeholder = {item.bio}
+                                    multiline = {true}
+                                    value = {updateBio}
+                                    onChangeText = {newBio => setUpdateBio(newBio)}
+                                />
+                        </View>
+                )}
+            />      
+
+            <View>
+                <TouchableOpacity
+                    style = {styles.editProfileBtn}
+                    activeOpacity = {.5}
+                    onPress = {handleButtonPress}
+                    >
+                        <Text style = {styles.buttonText}>Save</Text>
+                </TouchableOpacity>
+                </View>  
+            
+        </TouchableWithoutFeedback>
+    )
 }
 
 const buttonPressed = () => {
@@ -170,6 +258,13 @@ const styles = StyleSheet.create({
         marginBottom: 48,
         marginHorizontal: 30
     },
+    boxForm: {
+        marginBottom: 48,
+        marginHorizontal: 30,
+        height:120,
+        borderColor: "gray",
+        borderWidth: StyleSheet.hairlineWidth,
+    },
     inputTitle:{
         color: "#8A8F9E",
         textTransform: "uppercase", 
@@ -181,14 +276,18 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "#161F3D"
     },
+    boxInput: {
+        height: 40,
+        fontSize: 15,
+        color: "#161F3D",
+    },
     bio:{
         height:80,
-        borderColor: "#8A8F9E",
+        borderColor: "gray",
         borderWidth: StyleSheet.hairlineWidth,
         fontSize: 15,
         color: "#161F3D",
         alignContent: 'flex-start'
-
     }
 
 });

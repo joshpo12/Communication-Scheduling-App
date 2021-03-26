@@ -6,7 +6,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Login from './screens/Login';
 import AnimatedLoader from './screens/AnimatedLoader'
-import AboutMe from './screens/AboutMe'
+import AboutMe from './profiles_module/AboutMe'
+import EditProfile from './profiles_module/EditProfile'
+import ProfileList from './profiles_module/ProfileList'
+import Profile from './profiles_module/Profile'
 import AuctionForm from './screens/Auction_Form'
 import SubmitAssignment from './screens/SubmitAssignment'
 import Registration from './screens/Registration'
@@ -16,7 +19,6 @@ import Main from './screens/MainPage'
 import NewMessage from './messenger_module/NewMessage'
 import Chat from './messenger_module/Chat'
 import { IconButton } from 'react-native-paper';
-import EditProfile from './screens/EditProfile';
 
 
 // const DrawerNavigator = createDrawerNavigator({
@@ -68,6 +70,15 @@ const MessengerStack = () => {
     );
 }
 
+const ProfilesStack = () => {
+    return(
+        <Stack.Navigator>
+            <Stack.Screen name = "ProfileList" component = {ProfileList}/>
+            <Stack.Screen name = "Profile" component = {Profile}/>
+        </Stack.Navigator>
+    )
+}
+
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -82,6 +93,7 @@ export default function App() {
                 <Drawer.Screen name="Auction" component={AuctionForm} />
                 <Drawer.Screen name="Submit Assignments" component={SubmitAssignment} />
                 <Drawer.Screen name="Messenger" component={MessengerStack} />
+                <Drawer.Screen name="GOLD Girls" component={ProfilesStack}/>
             </Drawer.Navigator>
         </NavigationContainer>
     );

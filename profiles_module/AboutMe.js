@@ -1,5 +1,5 @@
 import React, { useEffect, useState, } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Alert, FlatList } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Alert, FlatList, ScrollView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import profilepic from '../assets/profilepic.png';
 import { firestore } from 'firebase';
@@ -34,13 +34,16 @@ export default function AboutMe({navigation}) {
             "You have pressed the button!"
         )
     }
-console.log(profile);
+
     return(
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <Text style={styles.headerTitle}>Your Profile</Text>
             <View style={styles.straightLine}/>
             <SafeAreaView style={styles.logoContainer}>
-                <Image source={profilepic}/>   
+                <Image 
+                source={profilepic}
+                style = {styles.profilePicture}
+                />   
             </SafeAreaView>
             <View>
                 <FlatList
@@ -71,7 +74,7 @@ console.log(profile);
                 <Text style={styles.events}>November 17th: Coping with Stress and Life</Text>
                 <Text style={styles.dueAmt}>6:30pm via Zoom - [zoom link here]</Text>
             </View>
-        </View>
+        </ScrollView>
     )};
 
 const styles = StyleSheet.create({
@@ -148,5 +151,10 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         textAlign: 'center'
-    }
+    },
+    profilePicture: {
+        margin: 20,
+        width: 150,
+        height: 150,
+    },
 });

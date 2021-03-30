@@ -15,8 +15,7 @@ export default function AddEvent({navigation}) {
             eventName: eventName,
             eventDate: eventDate,
             eventTime: eventTime,
-            rsvpCount: 0,
-            hasRsvped: false
+            rsvpCount: 0
           })
           .then(() => {
             navigation.goBack();

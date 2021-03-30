@@ -20,7 +20,7 @@ export default function EventCalendar({navigation}) {
                         eventDate: '',
                         eventTime: '',
                         rsvpCount: '',
-                    ...documentSnapshot.data()
+                        ...documentSnapshot.data()
                     }
                 });
                 setEvents(events);
@@ -29,34 +29,17 @@ export default function EventCalendar({navigation}) {
     }, []);
 
     function handleRSVP(item) {
-      if (item.hasRsvped == false) {
         firestore()
           .collection('calendarEvents')
           .doc(item._id)
           .update({
             rsvpCount: firebase.firestore.FieldValue.increment(1),
-            hasRsvped: true
           })
           .then(() => {
             console.log('One person has RSVPed');
           });
           Alert.alert("You have successfully RSVPed!");
-          return;
-      } else {
-        firestore()
-          .collection('calendarEvents')
-          .doc(item._id)
-          .update({
-            rsvpCount: firebase.firestore.FieldValue.increment(-1),
-            hasRsvped: false
-          })
-          .then(() => {
-            console.log('One person has cancelled their RSVP');
-          });
-          Alert.alert("You have cancelled your RSVP");
-          return;
-      }
-    }
+  }
 
 return(
     <View style={styles.topPadding}>
@@ -68,6 +51,7 @@ return(
           title="Add New Event">
         </Button>
         <Text style={styles.upcomingEvents}>Upcoming Events: </Text>
+        <Text style={styles.RsvpToEvents}>Click on an event to RSVP</Text>
         <FlatList
             scrollEnabled='true'
             data={events}
@@ -96,6 +80,11 @@ const styles = StyleSheet.create({
     },
     upcomingEvents: {
       fontSize: 25,
+      textAlign: 'center',
+      paddingTop: 20
+    },
+    RsvpToEvents: {
+      fontSize: 15,
       textAlign: 'center',
       paddingTop: 20
     },

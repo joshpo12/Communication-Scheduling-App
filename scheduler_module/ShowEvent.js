@@ -30,34 +30,17 @@ export default function ShowEvent({route, navigation}) {
     }, []);
 
     function handleRSVP(item) {
-      if (item.hasRsvped == false) {
-        firestore()
-          .collection('calendarEvents')
-          .doc(item._id)
-          .update({
-            rsvpCount: firebase.firestore.FieldValue.increment(1),
-            hasRsvped: true
-          })
-          .then(() => {
-            console.log('One person has RSVPed');
-          });
-          Alert.alert("You have successfully RSVPed!");
-          return;
-      } else {
-        firestore()
-          .collection('calendarEvents')
-          .doc(item._id)
-          .update({
-            rsvpCount: firebase.firestore.FieldValue.increment(-1),
-            hasRsvped: false
-          })
-          .then(() => {
-            console.log('One person has cancelled their RSVP');
-          });
-          Alert.alert("You have cancelled your RSVP");
-          return;
-      }
-    }
+      firestore()
+        .collection('calendarEvents')
+        .doc(item._id)
+        .update({
+          rsvpCount: firebase.firestore.FieldValue.increment(1),
+        })
+        .then(() => {
+          console.log('One person has RSVPed');
+        });
+        Alert.alert("You have successfully RSVPed!");
+}
 
     return(
         <View>
@@ -77,9 +60,6 @@ export default function ShowEvent({route, navigation}) {
                         onPress={() => handleRSVP(item)}
                         title={item.eventName + ' - ' + item.eventTime}
                         description={'Current RSVPs: ' + item.rsvpCount}                        
-                        // titleNumberOfLines={1}
-                        // titleStyle={styles.listTitle}
-                        // descriptionStyle={styles.listDescription}
                         descriptionNumberOfLines={2}
                     >
                     </List.Item>

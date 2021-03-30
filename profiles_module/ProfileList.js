@@ -11,7 +11,6 @@ import { IconButton, Title, List, Divider } from 'react-native-paper';
 const {width:WIDTH} = Dimensions.get('window')
 
 export default function ProfileList({navigation}) {
-    const currentUser = firebase.auth().currentUser;
     const [profileList, setProfileList] = useState([]);
     const docRef = firestore().collection('Users');
 

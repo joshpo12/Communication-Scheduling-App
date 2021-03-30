@@ -121,10 +121,19 @@ const MessengerStack = () => {
 }
 
 
-const ProfilesStackScreen = () => {
+const ProfilesStackScreen = ({navigation}) => {
     return(
-        <ProfilesStack.Navigator>
-            <ProfilesStack.Screen name = "ProfileList" component = {ProfileList}/>
+        <ProfilesStack.Navigator screenOptions={{
+            headerStyle: { backgroundColor: '#F5B0C2'},
+            headerTintColor: '#ffffff',
+            headerTitleStyle: { fontSize: 22 }
+        }}>
+            <ProfilesStack.Screen name = "ProfileList" component={ProfileList} options={{
+                headerLeft: () => (
+                    <Icon.Button name = "ios-menu" size = {25}
+                    backgroundColor="#F5B0C2" onPress={() => navigation.openDrawer()}>
+                    </Icon.Button>
+                )}}/>
             <ProfilesStack.Screen name = "Profile" component = {Profile}/>
             
         </ProfilesStack.Navigator>
@@ -147,15 +156,15 @@ const Drawer = createDrawerNavigator();
 export default function App() {
     return (
         <NavigationContainer>
-            <Drawer.Navigator>
-                <Drawer.Screen name="Login" component={LogInScreen} 
-                    options={{swipeEnabled:false, drawerLabel:""}}/>
+            <Drawer.Navigator initialRouteName="Login">
                 <Drawer.Screen name="Main" component={MainStackScreen} />
                 <Drawer.Screen name="My Profile" component={AboutMeStackScreen} />
                 <Drawer.Screen name="Submit Silent Auction Item" component={AuctionStackScreen} />
                 <Drawer.Screen name="Messenger" component={MessengerStack} />
                 <Drawer.Screen name="GOLD Girls" component={ProfilesStackScreen}/>
                 <Drawer.Screen name="Scheduler" component={SchedulerStackScreen} />
+                <Drawer.Screen name="Login" component={LogInScreen} 
+                    options={{swipeEnabled:false, drawerLabel:"Logout"}}/>
             </Drawer.Navigator>
         </NavigationContainer>
     );

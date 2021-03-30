@@ -1,10 +1,8 @@
-import React, { Component, useEffect, useState, } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, Alert, ScrollView, Keyboard, FlatList } from 'react-native';
-import logo from '../assets/goldicon.png';
+import React, { useEffect, useState, } from 'react';
+import { StyleSheet, Text, View, TextInput, Dimensions, Alert, Keyboard, FlatList } from 'react-native';
 import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import firebase from '../database/firebase.js';
 import { firestore } from 'firebase';
-
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -64,7 +62,7 @@ export default function EditProfile({navigation}) {
                 bio: updateBio
             })
         }
-        navigation.navigate("AboutMe");
+        navigation.navigate("About Me Page");
     }
 
     return (
@@ -72,7 +70,6 @@ export default function EditProfile({navigation}) {
             <View>
                 <Text style = {styles.headerTitle}>Edit profile</Text>
             </View>
-
             <FlatList   
                 data = {profile}
                 keyExtractor = {item => item._id}
@@ -86,7 +83,6 @@ export default function EditProfile({navigation}) {
                         onChangeText = {newName => setUpdateName(newName)}
                     />    
                 </View>
-
                 )}
             /> 
 

@@ -6,8 +6,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Login from './screens/Login';
 import AnimatedLoader from './screens/AnimatedLoader'
-import AboutMe from './screens/AboutMe'
-import Auction from './auction_module/Auction';
+import AboutMe from './profiles_module/AboutMe'
+import EditProfile from './profiles_module/EditProfile'
+import ProfileList from './profiles_module/ProfileList'
+import Profile from './profiles_module/Profile'
+import AuctionForm from './screens/Auction_Form'
+import SubmitAssignment from './screens/SubmitAssignment'
 import Registration from './screens/Registration'
 import Messenger from './messenger_module/Messenger'
 import Main from './screens/MainPage'
@@ -19,6 +23,7 @@ import AddEvent from './scheduler_module/AddEvent';
 import ShowEvent from './scheduler_module/ShowEvent';
 import EventCalendar from './scheduler_module/EventCalendar';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 
 
 // const DrawerNavigator = createDrawerNavigator({
@@ -116,6 +121,14 @@ const MessengerStack = () => {
     );
 }
 
+
+const ProfilesStack = () => {
+    return(
+        <Stack.Navigator>
+            <Stack.Screen name = "ProfileList" component = {ProfileList}/>
+            <Stack.Screen name = "Profile" component = {Profile}/>
+        </Stack.Navigator>
+
 const SchedulerStackScreen = () => {
     return(
         <NewSchedulerStack.Navigator name='modal' headerMode='none'>
@@ -139,6 +152,7 @@ export default function App() {
                 <Drawer.Screen name="My Profile" component={AboutMeStackScreen} />
                 <Drawer.Screen name="Submit Silent Auction Item" component={AuctionStackScreen} />
                 <Drawer.Screen name="Messenger" component={MessengerStack} />
+                <Drawer.Screen name="GOLD Girls" component={ProfilesStack}/>
                 <Drawer.Screen name="Scheduler" component={SchedulerStackScreen} />
             </Drawer.Navigator>
         </NavigationContainer>

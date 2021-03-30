@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import profilepic from '../assets/profilepic.png';
 import { firestore } from 'firebase';
 import firebase from '../database/firebase.js'
+import { useIsFocused } from '@react-navigation/native';
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -11,6 +12,7 @@ export default function AboutMe({navigation}) {
     const currentUser = firebase.auth().currentUser;
     const [profile, setProfile] = useState([]);
     const docRef = firestore().collection('Users').where('_id', "==", currentUser.uid);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const unsubscribe = docRef.onSnapshot((snapshot)=>{
@@ -26,7 +28,7 @@ export default function AboutMe({navigation}) {
             setProfile(profileData);
         });
         return () => unsubscribe();
-    }, []);
+    }, [isFocused]);
 
     function buttonPressed() {
         Alert.alert(
@@ -36,45 +38,50 @@ export default function AboutMe({navigation}) {
     }
 
     return(
-        <ScrollView style={styles.container}>
-            <Text style={styles.headerTitle}>Your Profile</Text>
-            <View style={styles.straightLine}/>
-            <SafeAreaView style={styles.logoContainer}>
-                <Image 
-                source={profilepic}
-                style = {styles.profilePicture}
-                />   
-            </SafeAreaView>
-            <View>
-                <FlatList
-                    data = {profile}
-                    keyExtractor = {item => item._id}
-                    renderItem = {({item}) => (
-                        <View>
-                            <Text style={styles.name}>{item.name}</Text>
-                            <Text style={styles.name}>{item.school} - {item.schoolYear}</Text>
-                            <Text style={styles.name}>{item.email}</Text>
-                            <Text style={styles.bio}>{item.bio}</Text>
-                        </View>
-                        )}
-                />
+        <FlatList
+            data = {profile}
+            ListHeaderComponent = {
                 <View>
-                    <TouchableOpacity style={styles.editProfileBtn} activeOpacity = {.5} 
-                    onPress={()=> navigation.navigate('EditProfile')}>
-                        <Text style={styles.buttonText}>Edit Profile</Text>
-                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>Your Profile</Text>
+                    <View style={styles.straightLine}/>
+                    <SafeAreaView style={styles.logoContainer}>
+                        <Image 
+                        source={profilepic}
+                        style = {styles.profilePicture}
+                        />   
+                    </SafeAreaView>
                 </View>
+            }
+            keyExtractor = {item => item._id}
+            renderItem = {({item}) => (
+                <View>
+                    <Text style={styles.name}>{item.name}</Text>
+                    <Text style={styles.name}>{item.school}</Text>
+                    <Text style={styles.name}>{item.schoolYear}</Text>
+                    <Text style={styles.name}>{item.email}</Text>
+                    <Text style={styles.bio}>{item.bio}</Text>
+                </View>
+                )}
+        ListFooterComponent = {
+            <View>
+                <TouchableOpacity style={styles.editProfileBtn} activeOpacity = {.5} 
+                onPress={()=> navigation.navigate('EditProfile')}>
+                    <Text style={styles.buttonText}>Edit Profile</Text>
+                </TouchableOpacity>
                 <View style={styles.straightLine}/>
-                <Text style={styles.userOnly}>Only You Can See</Text>
-                <Text style={styles.yourDues}>Your Dues:</Text>
-                <Text style={styles.dueAmt}>Remaining Due: $250</Text>
-                <Text style={styles.yourDues}>Your Events:</Text>
-                <Text style={styles.events}>November 3rd: Finance Class</Text>
-                <Text style={styles.dueAmt}>4:30pm via Zoom - [zoom link here]</Text>
-                <Text style={styles.events}>November 17th: Coping with Stress and Life</Text>
+                    <Text style={styles.userOnly}>Only You Can See</Text>
+                    <Text style={styles.yourDues}>Your Dues:</Text>
+                    <Text style={styles.dueAmt}>Remaining Due: $250</Text>
+                    <Text style={styles.yourDues}>Your Events:</Text>
+                    <Text style={styles.events}>November 3rd: Finance Class</Text>
+                    <Text style={styles.dueAmt}>4:30pm via Zoom - [zoom link here]</Text>
+                    <Text style={styles.events}>November 17th: Coping with Stress and Life</Text>
                 <Text style={styles.dueAmt}>6:30pm via Zoom - [zoom link here]</Text>
-            </View>
-        </ScrollView>
+             </View>
+         }/>
+
+                
+                
     )};
 
 const styles = StyleSheet.create({

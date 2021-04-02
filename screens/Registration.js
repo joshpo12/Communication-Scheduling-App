@@ -53,7 +53,7 @@ export default class Registration extends Component {
                     members: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
                 });
                 res.user.updateProfile({
-                    userName: this.state.userName
+                    displayName: this.state.userName
                 })
                 console.log('User registered successfully!')
                 this.setState({

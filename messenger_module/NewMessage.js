@@ -10,6 +10,7 @@ const {width:WIDTH} = Dimensions.get('window')
 
 export default function NewMessage({ navigation }) {
     const currentUser = firebase.auth().currentUser;
+    const currentUserName = currentUser.displayName;
 
     const [room, setRoom] = useState('');
     const [loading, setLoading] = useState(true);
@@ -43,10 +44,10 @@ export default function NewMessage({ navigation }) {
     }
 
     //creates a new chat room with the current user and the other chat user chosen
-    function handleButtonPress(userID){
+    function handleButtonPress(userID, userNam){
 
         if(currentUser.uid < userID){
-            const roomID = currentUser.uid + userID;
+            const roomID = userNam + ", " + currentUserName;
 
             //creates a document within the chat collection setting the chat room name as document name
             firestore().collection('chat').doc(roomID)
@@ -59,7 +60,7 @@ export default function NewMessage({ navigation }) {
         });
 
         } else {
-            const roomID = userID + currentUser.uid;
+            const roomID = userNam + ", " + currentUserName;
 
             firestore().collection('chat').doc(roomID)
         .set({
@@ -91,7 +92,7 @@ export default function NewMessage({ navigation }) {
             ItemSeparatorComponent={() => <Divider />}
             renderItem={({item}) => (
                 <TouchableOpacity
-                    onPress={() => handleButtonPress(item._id)}
+                    onPress={() => handleButtonPress(item._id, item.name)}
                 >
                 <List.Item
                     title={item.name}

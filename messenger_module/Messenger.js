@@ -76,6 +76,11 @@ export default function Messenger({navigation}) {
 }
 
 const styles = StyleSheet.create({
+    /*container: {
+        backgroundColor: '#f5f5f5',
+        flex: 1
+    },*/
+
     header:{
         marginTop: 15,
         marginBottom: 5,

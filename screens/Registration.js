@@ -43,6 +43,9 @@ export default class Registration extends Component {
                 firestore().collection('Users').doc(currentUser.uid).set({
                     name: this.state.userName,
                     email: this.state.email,
+                    school: 'Please update your school',
+                    schoolYear: 'Please update your school year',
+                    bio: 'Please update your bio',
                     _id: currentUser.uid
                 });
                 //updates the members in Lincoln GOLD Announcements chat to add the new user

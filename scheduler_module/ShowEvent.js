@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Button, Modal, FlatList, Alert } from 'react-native';
+import { View, StyleSheet, Text, Button, Modal, FlatList, Alert, TouchableOpacity } from 'react-native';
 import { List, Divider } from 'react-native-paper';
 import { firestore } from 'firebase';
 import * as firebase from 'firebase';
@@ -8,8 +8,10 @@ export default function ShowEvent({route, navigation}) {
 
     const [events, setEvents] = useState([]);
 
+    // chosen day from EventCalendar
     const { chosenDay } = route.params;
 
+    // pulls events from firebase that match the selected calendar day
     useEffect(() => {
         const unsubscribe = firestore()
             .collection('calendarEvents')
@@ -29,6 +31,7 @@ export default function ShowEvent({route, navigation}) {
             return () => unsubscribe();
     }, []);
 
+    // handle rsvp function (same as in EventCalendar)
     function handleRSVP(item) {
       firestore()
         .collection('calendarEvents')
@@ -44,6 +47,7 @@ export default function ShowEvent({route, navigation}) {
 
     return(
         <View>
+          {/* creates sliding modal */}
             <Modal
               transparent={false}
               animationType={"slide"}
@@ -51,6 +55,8 @@ export default function ShowEvent({route, navigation}) {
               <View>
                 <View style={{backgroundColor: "000000aa", margin: 50, padding: 40, borderRadius: 10}}>
                 <Text style={styles.title}>Events on {chosenDay}</Text>
+
+                {/* list of events for selected day (are selectable like events on EventCalendar) */}
                 <FlatList
                     data={events}
                     keyExtractor={item => item._id}
@@ -65,7 +71,15 @@ export default function ShowEvent({route, navigation}) {
                     </List.Item>
                     )}
                 />
-                <Button title="Close Form" onPress={() => navigation.goBack()}></Button>
+
+                {/* button to close form */}
+                <TouchableOpacity
+                        style = {styles.submitFormButton}
+                        activeOpacity = {.5}
+                        onPress = {() => navigation.goBack()}
+                        >
+                            <Text style = {styles.buttonText}> Close Form</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </Modal>
@@ -73,9 +87,24 @@ export default function ShowEvent({route, navigation}) {
     )
 }
 
+// css to style buttons and text
 const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     textAlign: 'center' 
-  }
+  },
+  submitFormButton: {
+    alignItems: 'center',
+    marginTop: 10,
+    paddingBottom: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    backgroundColor: '#F5B0C2',
+    borderRadius: 30,
+    borderColor: '#fff'
+  },
+  buttonText: {
+    marginTop: 10,
+    textAlign: 'center'
+ }
 })

@@ -53,8 +53,9 @@ export default function MainPage ({ navigation }) {
     }, []);
     
     function handleSelect(item) {
-        navigation.navigate('Profile', {
-            id: item,
+        navigation.navigate('GOLD Girls', {
+            screen: 'ProfileList',  
+            params: {id: item},
         });
     }
 

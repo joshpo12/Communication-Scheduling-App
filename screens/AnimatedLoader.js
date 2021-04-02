@@ -31,7 +31,7 @@ export default class AnimatedLoader extends React.Component {
         return wait(2500).then(() => this.props.navigation.navigate('Login'))
     };
     render() {
-        const colorLayer = <View style={[StyleSheet.absoluteFill, { backgroundColor: "#FCC201"}]} />;
+        const colorLayer = <View style={[StyleSheet.absoluteFill, { backgroundColor: "#F5B0C2"}]} />;
 
         const whiteLayer = <View style={[StyleSheet.absoluteFill, { backgroundColor: "#FFF"}]} />;
 

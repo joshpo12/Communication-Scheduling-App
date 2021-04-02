@@ -7,16 +7,18 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Login from './screens/Login';
 import AnimatedLoader from './screens/AnimatedLoader'
 import AboutMe from './screens/AboutMe'
-import AuctionForm from './screens/Auction_Form'
-import SubmitAssignment from './screens/SubmitAssignment'
+import Auction from './auction_module/Auction';
 import Registration from './screens/Registration'
-import Scheduling from './screens/Scheduling'
 import Messenger from './messenger_module/Messenger'
 import Main from './screens/MainPage'
 import NewMessage from './messenger_module/NewMessage'
 import Chat from './messenger_module/Chat'
 import { IconButton } from 'react-native-paper';
 import EditProfile from './screens/EditProfile';
+import AddEvent from './scheduler_module/AddEvent';
+import ShowEvent from './scheduler_module/ShowEvent';
+import EventCalendar from './scheduler_module/EventCalendar';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 // const DrawerNavigator = createDrawerNavigator({
@@ -33,32 +35,78 @@ import EditProfile from './screens/EditProfile';
 
 
 const Stack = createStackNavigator();
-
+const LogInStack = createStackNavigator();
+const MainStack = createStackNavigator();
+const AboutMeStack = createStackNavigator();
+const AuctionStack = createStackNavigator();
+const SchedulerStack = createStackNavigator();
 const ChatStack = createStackNavigator();
 const NewMessageStack = createStackNavigator();
+const NewSchedulerStack = createStackNavigator();
 
-const IntroScreens = () => {
+
+const LogInScreen = () => {
     return(
-        <Stack.Navigator>
-            <Stack.Screen name="AnimatedLoader" component={AnimatedLoader}
+        <LogInStack.Navigator>
+            <LogInStack.Screen name="AnimatedLoader" component={AnimatedLoader}
                 options={{headerShown:null}}/>
-            <Stack.Screen name="Login" component={Login}
+            <LogInStack.Screen name="Login" component={Login}
                 options={{gestureEnabled:false, headerLeft: null}}/>
-            <Stack.Screen name="Registration" component={Registration}/>
-        </Stack.Navigator>
+            <LogInStack.Screen name="Registration" component={Registration}/>
+        </LogInStack.Navigator>
     );
 }
-
-const LogInStack = () => {
+const MainStackScreen = ({navigation}) => {
     return(
-        <Stack.Navigator>
-            <Stack.Screen name="AboutMe" component={AboutMe}
-                options={{gestureEnabled:false, headerLeft: null}}/>
-            <Stack.Screen name = "EditProfile" component = {EditProfile}/>
-        </Stack.Navigator>
-    );
+        <MainStack.Navigator 
+        screenOptions={{
+            headerStyle: { backgroundColor: '#F5B0C2'},
+            headerTintColor: '#ffffff',
+            headerTitleStyle: { fontSize: 22 }
+        }}>
+            <MainStack.Screen name="Main Page" component={Main} options={{
+                headerLeft: () => (
+                    <Icon.Button name = "ios-menu" size = {25}
+                    backgroundColor="#F5B0C2" onPress={() => navigation.openDrawer()}>
+                    </Icon.Button>
+                )}}/>
+        </MainStack.Navigator>
+    )
 }
-
+const AboutMeStackScreen = ({navigation}) => {
+    return(
+        <AboutMeStack.Navigator 
+            screenOptions={{
+                headerStyle: { backgroundColor: '#F5B0C2'},
+                headerTintColor: '#ffffff',
+                headerTitleStyle: { fontSize: 22 }
+            }}>
+            <AboutMeStack.Screen name="About Me Page" component={AboutMe} options={{
+                headerLeft: () => (
+                    <Icon.Button name = "ios-menu" size = {25}
+                    backgroundColor="#F5B0C2" onPress={() => navigation.openDrawer()}>
+                    </Icon.Button>
+                )}}/>
+        </AboutMeStack.Navigator>
+    )
+}
+const AuctionStackScreen = ({navigation}) => {
+    return(
+        <AuctionStack.Navigator 
+            screenOptions={{
+                headerStyle: { backgroundColor: '#F5B0C2'},
+                headerTintColor: '#ffffff',
+                headerTitleStyle: { fontSize: 22 }
+            }}>
+            <AuctionStack.Screen name="About Me Page" component={Auction} options={{
+                headerLeft: () => (
+                    <Icon.Button name = "ios-menu" size = {25}
+                    backgroundColor="#F5B0C2" onPress={() => navigation.openDrawer()}>
+                    </Icon.Button>
+                )}}/>
+        </AuctionStack.Navigator>
+    )
+}
 const MessengerStack = () => {
     return(
         <NewMessageStack.Navigator mode='modal' headerMode='none'>
@@ -68,20 +116,30 @@ const MessengerStack = () => {
     );
 }
 
+const SchedulerStackScreen = () => {
+    return(
+        <NewSchedulerStack.Navigator name='modal' headerMode='none'>
+                <NewSchedulerStack.Screen name='Scheduler Header' component={SchedulerHeader}/>
+                <NewSchedulerStack.Screen name='Agenda' component={EventCalendar} />
+                <NewSchedulerStack.Screen name='AddEvent' component={AddEvent} />
+                <NewSchedulerStack.Screen name='ShowEvent' component={ShowEvent} />
+        </NewSchedulerStack.Navigator>
+    )
+}
+
 const Drawer = createDrawerNavigator();
 
 export default function App() {
     return (
         <NavigationContainer>
             <Drawer.Navigator>
-                <Drawer.Screen name="Login" component={IntroScreens} 
+                <Drawer.Screen name="Login" component={LogInScreen} 
                     options={{swipeEnabled:false, drawerLabel:""}}/>
-                <Drawer.Screen name="Main" component={LogInStack} />
-                <Drawer.Screen name="My Profile" component={AboutMe} />
-                <Drawer.Screen name="Scheduling" component={Scheduling} />
-                <Drawer.Screen name="Auction" component={AuctionForm} />
-                <Drawer.Screen name="Submit Assignments" component={SubmitAssignment} />
+                <Drawer.Screen name="Main" component={MainStackScreen} />
+                <Drawer.Screen name="My Profile" component={AboutMeStackScreen} />
+                <Drawer.Screen name="Submit Silent Auction Item" component={AuctionStackScreen} />
                 <Drawer.Screen name="Messenger" component={MessengerStack} />
+                <Drawer.Screen name="Scheduler" component={SchedulerStackScreen} />
             </Drawer.Navigator>
         </NavigationContainer>
     );
@@ -106,6 +164,11 @@ const chat = () => {
                             size = {28}
                             color = '#ffffff'
                             onPress = {() => navigation.navigate('NewMessage')}/>
+                    ),
+                    headerLeft: () => (
+                        <Icon.Button name = "ios-menu" size = {25}
+                        backgroundColor="#F5B0C2" onPress={() => navigation.openDrawer()}>
+                        </Icon.Button>
                     )
                 })}
             />
@@ -114,9 +177,30 @@ const chat = () => {
                 title: route.params.thread.name
             })} />
         </ChatStack.Navigator>
-            
-
     );
+}
+
+const SchedulerHeader = () => {
+    return(
+        <SchedulerStack.Navigator
+            screenOptions={{
+                headerStyle: { backgroundColor: '#F5B0C2'},
+                headerTintColor: '#ffffff',
+                headerTitleStyle: { fontSize: 22 }
+            }}>
+                <SchedulerStack.Screen 
+                name='Event Calendar' 
+                component={EventCalendar}
+                options={({ navigation }) => ({
+                    headerLeft: () => (
+                        <Icon.Button name = "ios-menu" size = {25}
+                        backgroundColor="#F5B0C2" onPress={() => navigation.openDrawer()}>
+                        </Icon.Button>
+                    )
+                })}
+            />
+        </SchedulerStack.Navigator>
+    )
 }
 
 

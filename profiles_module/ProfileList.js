@@ -33,6 +33,16 @@ export default function ProfileList({navigation}) {
             id: item,
         });
     }
+
+    function getInitials(username) {
+        let initials = "";
+        const split = username.split(' ', 3);
+        for(var i = 0; i < split.length; ++i) {
+            initials += split[i].charAt(0);
+        }
+        return initials
+    }
+    
     return (
         <View style = {styles.container}>
             <Text style={styles.headerTitle}>Find a GOLD Girl</Text>
@@ -45,10 +55,12 @@ export default function ProfileList({navigation}) {
                 renderItem = {({item}) => (
                     <TouchableOpacity onPress = {() => handleSelect(item._id)}>
                         <View style = {styles.list}>
-                        <Image
-                            style = {styles.tinyPic}
-                            source = {profilepic}
-                        />
+                        <Avatar 
+                        size = "xlarge"
+                        rounded
+                        title = {getInitials(item.name)}
+                        overlayContainerStyle = {{backgroundColor: '#F5B0C2'}}
+                        />  
                         <Text style = {styles.name}>
                             {item.name}
                         </Text>

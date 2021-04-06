@@ -8,6 +8,7 @@ import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-h
 //import { ScreenStackHeaderRightView } from 'react-native-screens';
 import { firestore } from 'firebase';
 import firebase from '../database/firebase.js';
+import { useIsFocused } from '@react-navigation/native';
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -16,6 +17,8 @@ export default function MainPage ({ navigation }) {
     const [annoucements, setAnnouncements] = useState([]);
     const [profileList, setProfileList] = useState([]);
     const docRef = firestore().collection('Users');
+    const isFocused = useIsFocused();
+    const currentUser = firebase.auth().currentUser;
 
     useEffect(() => {
         const unsubscribe = firestore()
@@ -38,7 +41,7 @@ export default function MainPage ({ navigation }) {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [isFocused]);
 
     useEffect(() => {
         const unsubscribe = docRef.onSnapshot((snapshot) =>{
@@ -50,13 +53,17 @@ export default function MainPage ({ navigation }) {
             setProfileList(listData);
         });
         return() => unsubscribe();
-    }, []);
+    }, [isFocused]);
     
     function handleSelect(item) {
         navigation.navigate('GOLD Girls', {
             screen: 'ProfileList',  
             params: {id: item},
         });
+    }
+
+    function compareIDs(item) {
+        return (item._id == currentUser.uid);
     }
 
     return (
@@ -110,6 +117,7 @@ export default function MainPage ({ navigation }) {
                 keyExtractor = {item => item._id}
                 ItemSeparatorComponent = {() => <Divider />}
                 renderItem = {({item}) => (
+                    compareIDs(item) == false ? 
                     <TouchableOpacity onPress = {() => handleSelect(item._id)}>
                     <List.Item
                     title={item.name}
@@ -117,6 +125,7 @@ export default function MainPage ({ navigation }) {
                     titleStyle={styles.listTitle}
                 />
                     </TouchableOpacity>
+                    : null
                 )}
             />
                 </View>

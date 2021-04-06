@@ -102,7 +102,7 @@ const AuctionStackScreen = ({navigation}) => {
                 headerTintColor: '#ffffff',
                 headerTitleStyle: { fontSize: 22 }
             }}>
-            <AuctionStack.Screen name="About Me Page" component={Auction} options={{
+            <AuctionStack.Screen name="Submit a Silent Auction Item" component={Auction} options={{
                 headerLeft: () => (
                     <Icon.Button name = "ios-menu" size = {25}
                     backgroundColor="#F5B0C2" onPress={() => navigation.openDrawer()}>

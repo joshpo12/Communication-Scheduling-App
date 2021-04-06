@@ -1,27 +1,65 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, Alert, ScrollView, Keyboard } from 'react-native';
+import React, { Component, useState, useEffect } from 'react';
+import { StyleSheet, Text, View, ImageBackground, Image, SafeAreaView, TextInput, Dimensions, Alert, ScrollView, Keyboard, FlatList } from 'react-native';
 import { SearchBar } from 'react-native-elements';
+import { IconButton, Title, List, Divider } from 'react-native-paper';
 import logo from '../assets/goldicon.png'
+import profilepic from '../assets/female.png'
 import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler'
-import { ScreenStackHeaderRightView } from 'react-native-screens';
+//import { ScreenStackHeaderRightView } from 'react-native-screens';
+import { firestore } from 'firebase';
+import firebase from '../database/firebase.js';
+
 const {width:WIDTH} = Dimensions.get('window')
 
-export default class MainPage extends Component {
-    static navigationOptions = {
-        title: 'Main Page', 
-    };
-    state = {
-        search: '',
-    };
+export default function MainPage ({ navigation }) {
 
-    updateSearch = (search) => {
-        this.setState({ search });
-    };
-    render() {
-        const { navigate } = this.props.navigation;
-        const { search } = this.state;
-        
-        return (
+    const [annoucements, setAnnouncements] = useState([]);
+    const [profileList, setProfileList] = useState([]);
+    const docRef = firestore().collection('Users');
+
+    useEffect(() => {
+        const unsubscribe = firestore()
+        .collection('chat')
+        .where('name', '==', 'Lincoln Gold Announcements' )
+        .onSnapshot(querySnapshot => {
+            const annoucements = querySnapshot.docs.map(documentSnapshot => {
+                return {
+                    _id: documentSnapshot.id,
+                    name: '',
+                    latestMessage: {
+                        text: ''
+                    },
+                    ...documentSnapshot.data()
+                };
+            });
+
+            setAnnouncements(annoucements);
+
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        const unsubscribe = docRef.onSnapshot((snapshot) =>{
+            const listData = snapshot.docs.map((doc) => ({
+                _id: doc.id,
+                name: '',
+                ...doc.data(),
+            }));
+            setProfileList(listData);
+        });
+        return() => unsubscribe();
+    }, []);
+    
+    function handleSelect(item) {
+        navigation.navigate('GOLD Girls', {
+            screen: 'ProfileList',  
+            params: {id: item},
+        });
+    }
+
+    return (
             <TouchableWithoutFeedback 
             onPress={Keyboard.dismiss} 
             accessible={false}>
@@ -34,7 +72,30 @@ export default class MainPage extends Component {
                 <View style = {styles.horizontalLine}></View>
 
                 <View style = {styles.frontendBox}>
-                    <Text style = {styles.mainPageText}>test</Text>
+                    <FlatList
+                        data={annoucements}
+                        keyExtractor={item => item._id}
+                        ItemSeparatorComponent={() => <Divider />}
+                        renderItem={({item}) => (
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('Messenger', { thread:item })}
+                            >
+                            <List.Item
+                                title={item.name}
+                                description={item.latestMessage.text}
+                                titleNumberOfLines={1}
+                                titleStyle={styles.listTitle}
+                                descriptionStyle={styles.listDescription}
+                                descriptionNumberOfLines={1}
+                            />
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
+
+                <View>
+                    <Text style = {styles.messageComment}> 
+                        (Click to see recent notifications)</Text>
                 </View>
 
                 <View alignItems = 'center'>
@@ -42,43 +103,25 @@ export default class MainPage extends Component {
                     Find a Fellow GOLD Girl</Text>
                 </View>
 
-                <View alignItems = 'center'>
-                    <SearchBar 
-                    inputStyle = {styles.searchbar}
-                    inputContainerStyle = {styles.searchInputContainer}
-                    containerStyle = {styles.searchbarContainer}
-                    placeholder = "Search" 
-                    onChangeText = {this.updateSearch}
-                    value = {search}
-                    />
+                <View>
+                <FlatList
+                scrollEnabled = 'true'
+                data = {profileList}
+                keyExtractor = {item => item._id}
+                ItemSeparatorComponent = {() => <Divider />}
+                renderItem = {({item}) => (
+                    <TouchableOpacity onPress = {() => handleSelect(item._id)}>
+                    <List.Item
+                    title={item.name}
+                    titleNumberOfLines={1}
+                    titleStyle={styles.listTitle}
+                />
+                    </TouchableOpacity>
+                )}
+            />
                 </View>
-
-                <ScrollView 
-                style = {styles.scroll}
-                contentContainerStyle = {styles.scrollContainer}>
-                    <Text style = {styles.mainPageText}>
-                        Quinn Reimer
-                    </Text>
-                    <Text style = {styles.mainPageText}>
-                        Josh Pokorny
-                    </Text>
-                    <Text style = {styles.mainPageText}>
-                        Jessica Wheeler
-                    </Text>
-                    <Text style = {styles.mainPageText}>
-                        Inderpreet Kaur
-                    </Text>
-                    <Text style = {styles.mainPageText}>
-                        Giorno Giovanna
-                    </Text>
-                    <Text style = {styles.mainPageText}>
-                        Kevin Nguyen
-                    </Text>
-                </ScrollView>
             </TouchableWithoutFeedback>
         );
-    }
-    
 }
 
 const styles = StyleSheet.create({
@@ -151,7 +194,7 @@ const styles = StyleSheet.create({
     },
     mainPageText: {
         marginVertical: 10,
-        fontSize: 20,
+        fontSize: 25,
         color: 'gray',
     },
     searchbarContainer: {
@@ -176,5 +219,22 @@ const styles = StyleSheet.create({
     scrollContainer: {
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    tinyPic: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        margin: 20,
+    }, 
+
+    listTitle: {
+        fontSize: 18
+    },
+
+    messageComment: {
+        marginTop: -45,
+        marginLeft: 100,
+        marginRight: 100
     }
+
 });

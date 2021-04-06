@@ -18,8 +18,9 @@ export default function Messenger({navigation}) {
     //used to call the chat collection from firebase 
     useEffect(() => {
         const unsubscribe = firestore()
-        .collection('chat').where('members', 'array-contains', currentUser.uid )
+        .collection('chat')
         //.orderBy('latestMessage.createdAt', 'desc')
+        .where('members', 'array-contains', currentUser.uid )
         .onSnapshot(querySnapshot => {
             const chats = querySnapshot.docs.map(documentSnapshot => {
                 return {
@@ -75,6 +76,11 @@ export default function Messenger({navigation}) {
 }
 
 const styles = StyleSheet.create({
+    /*container: {
+        backgroundColor: '#f5f5f5',
+        flex: 1
+    },*/
+
     header:{
         marginTop: 15,
         marginBottom: 5,

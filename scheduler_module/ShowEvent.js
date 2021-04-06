@@ -36,7 +36,7 @@ export default function ShowEvent({route, navigation}) {
           .doc(item._id)
           .update({
             rsvpCount: firebase.firestore.FieldValue.increment(1),
-            hasRsvped: true
+            hasRsvped: true,
           })
           .then(() => {
             console.log('One person has RSVPed');
@@ -49,7 +49,7 @@ export default function ShowEvent({route, navigation}) {
           .doc(item._id)
           .update({
             rsvpCount: firebase.firestore.FieldValue.increment(-1),
-            hasRsvped: false
+            hasRsvped: false,
           })
           .then(() => {
             console.log('One person has cancelled their RSVP');

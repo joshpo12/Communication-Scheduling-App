@@ -4,10 +4,15 @@ import { List, Divider } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
 import { firestore } from 'firebase';
 import * as firebase from 'firebase';
+import { CurrentRenderContext } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
+
 
 export default function EventCalendar({navigation}) {
 
     const [events, setEvents] = useState([]);
+    const currentUser = firebase.auth().currentUser;
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const unsubscribe = firestore()
@@ -16,6 +21,7 @@ export default function EventCalendar({navigation}) {
                 const events = querySnapshot.docs.map(documentSnapshot => {
                     return {
                         _id: documentSnapshot.id,
+                        attendees: '',
                         eventName: '',
                         eventDate: '',
                         eventTime: '',
@@ -26,7 +32,7 @@ export default function EventCalendar({navigation}) {
                 setEvents(events);
             });
             return () => unsubscribe();
-    }, []);
+    }, [isFocused]);
 
     function handleRSVP(item) {
       if (item.hasRsvped == false) {
@@ -35,9 +41,17 @@ export default function EventCalendar({navigation}) {
           .doc(item._id)
           .update({
             rsvpCount: firebase.firestore.FieldValue.increment(1),
-            hasRsvped: true
+            hasRsvped: true,
+            attendees: firestore.FieldValue.arrayUnion(currentUser.uid),
           })
           .then(() => {
+            firestore()
+              .collection('Users')
+              .doc(currentUser.uid)
+              .update({
+                userEvents: firestore.FieldValue.arrayUnion(item._id)
+              })
+            console.log(item.attendees.length);
             console.log('One person has RSVPed');
           });
           Alert.alert("You have successfully RSVPed!");
@@ -48,9 +62,17 @@ export default function EventCalendar({navigation}) {
           .doc(item._id)
           .update({
             rsvpCount: firebase.firestore.FieldValue.increment(-1),
-            hasRsvped: false
+            hasRsvped: false,
+            attendees: firestore.FieldValue.arrayRemove(currentUser.uid),
           })
           .then(() => {
+            firestore()
+              .collection('Users')
+              .doc(currentUser.uid)
+              .update({
+                userEvents: firestore.FieldValue.arrayRemove(item._id)
+              })
+            console.log(item.attendees.length);
             console.log('One person has cancelled their RSVP');
           });
           Alert.alert("You have cancelled your RSVP");

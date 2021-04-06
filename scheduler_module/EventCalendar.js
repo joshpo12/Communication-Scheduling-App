@@ -4,10 +4,15 @@ import { List, Divider } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
 import { firestore } from 'firebase';
 import * as firebase from 'firebase';
+import { CurrentRenderContext } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
+
 
 export default function EventCalendar({navigation}) {
 
     const [events, setEvents] = useState([]);
+    const currentUser = firebase.auth().currentUser;
+    const isFocused = useIsFocused();
 
     // firebase to get events from calendarEvents collection
     useEffect(() => {
@@ -17,6 +22,7 @@ export default function EventCalendar({navigation}) {
                 const events = querySnapshot.docs.map(documentSnapshot => {
                     return {
                         _id: documentSnapshot.id,
+                        attendees: '',
                         eventName: '',
                         eventDate: '',
                         eventTime: '',
@@ -27,7 +33,7 @@ export default function EventCalendar({navigation}) {
                 setEvents(events);
             });
             return () => unsubscribe();
-    }, []);
+    }, [isFocused]);
 
     // method to add new rsvp to rsvpCount and push to firebase
     function handleRSVP(item) {
@@ -38,6 +44,13 @@ export default function EventCalendar({navigation}) {
             rsvpCount: firebase.firestore.FieldValue.increment(1),
           })
           .then(() => {
+            firestore()
+              .collection('Users')
+              .doc(currentUser.uid)
+              .update({
+                userEvents: firestore.FieldValue.arrayUnion(item._id)
+              })
+            console.log(item.attendees.length);
             console.log('One person has RSVPed');
           });
           Alert.alert("You have successfully RSVPed!");

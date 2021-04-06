@@ -1,4 +1,5 @@
 import React, { useEffect, useState, } from 'react';
+import { Avatar } from "react-native-elements";
 import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Alert, FlatList, ScrollView} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import profilepic from '../assets/profilepic.png';
@@ -23,13 +24,23 @@ export default function AboutMe({navigation}) {
                 schoolYear: '',
                 bio: '',
                 email: '',
+                userEvents: '',
                 ...doc.data(),
             }));
             setProfile(profileData);
+            
         });
         return () => unsubscribe();
     }, [isFocused]);
 
+    function getInitials(username) {
+        let initials = "";
+        const split = username.split(' ', 3);
+        for(var i = 0; i < split.length; ++i) {
+            initials += split[i].charAt(0);
+        }
+        return initials
+    };
     function buttonPressed() {
         Alert.alert(
             "Button has been pressed!",
@@ -44,17 +55,19 @@ export default function AboutMe({navigation}) {
                 <View>
                     <Text style={styles.headerTitle}>Your Profile</Text>
                     <View style={styles.straightLine}/>
-                    <SafeAreaView style={styles.logoContainer}>
-                        <Image 
-                        source={profilepic}
-                        style = {styles.profilePicture}
-                        />   
-                    </SafeAreaView>
                 </View>
             }
             keyExtractor = {item => item._id}
             renderItem = {({item}) => (
                 <View>
+                    <SafeAreaView style={styles.logoContainer}>
+                        <Avatar 
+                        size = "xlarge"
+                        rounded
+                        title = {getInitials(item.name)}
+                        overlayContainerStyle = {{backgroundColor: '#F5B0C2'}}
+                        />   
+                    </SafeAreaView>
                     <Text style={styles.name}>{item.name}</Text>
                     <Text style={styles.name}>{item.school}</Text>
                     <Text style={styles.name}>{item.schoolYear}</Text>
@@ -68,7 +81,7 @@ export default function AboutMe({navigation}) {
                 onPress={()=> navigation.navigate('EditProfile')}>
                     <Text style={styles.buttonText}>Edit Profile</Text>
                 </TouchableOpacity>
-                <View style={styles.straightLine}/>
+               {/* <View style={styles.straightLine}/>
                     <Text style={styles.userOnly}>Only You Can See</Text>
                     <Text style={styles.yourDues}>Your Dues:</Text>
                     <Text style={styles.dueAmt}>Remaining Due: $250</Text>
@@ -76,7 +89,7 @@ export default function AboutMe({navigation}) {
                     <Text style={styles.events}>November 3rd: Finance Class</Text>
                     <Text style={styles.dueAmt}>4:30pm via Zoom - [zoom link here]</Text>
                     <Text style={styles.events}>November 17th: Coping with Stress and Life</Text>
-                <Text style={styles.dueAmt}>6:30pm via Zoom - [zoom link here]</Text>
+        <Text style={styles.dueAmt}>6:30pm via Zoom - [zoom link here]</Text> */}
              </View>
          }/>
 

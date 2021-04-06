@@ -62,12 +62,14 @@ export default function MainPage ({ navigation }) {
     return (
             <TouchableWithoutFeedback 
             onPress={Keyboard.dismiss} 
-            accessible={false}>
+            accessible={false}
+            >
+                
                 <Text style={styles.logoText}></Text>
-                <SafeAreaView style={styles.logoContainer}>
+                <View style={styles.logoContainer}>
                     <Image source={logo}/>
                     
-                </SafeAreaView>
+                </View>
 
                 <View style = {styles.horizontalLine}></View>
 
@@ -99,32 +101,37 @@ export default function MainPage ({ navigation }) {
                 </View>
 
                 <View alignItems = 'center'>
-                <Text style = {styles.mainPageText}>
-                    Find a Fellow GOLD Girl</Text>
+                    <Text style = {styles.mainPageText}>
+                        Find a Fellow GOLD Girl</Text>
                 </View>
 
-                <View>
-                <FlatList
-                scrollEnabled = 'true'
-                data = {profileList}
-                keyExtractor = {item => item._id}
-                ItemSeparatorComponent = {() => <Divider />}
-                renderItem = {({item}) => (
-                    <TouchableOpacity onPress = {() => handleSelect(item._id)}>
-                    <List.Item
-                    title={item.name}
-                    titleNumberOfLines={1}
-                    titleStyle={styles.listTitle}
-                />
-                    </TouchableOpacity>
-                )}
-            />
+                <View >
+                    <FlatList 
+                    contentContainerStyle={{paddingBottom:1550}}
+                    scrollEnabled = 'true'
+                    data = {profileList}
+                    keyExtractor = {item => item._id}
+                    ItemSeparatorComponent = {() => <Divider />}
+                    renderItem = {({item}) => (
+                        <TouchableOpacity onPress = {() => handleSelect(item._id) }>
+                            <List.Item
+                                title={item.name}
+                                titleNumberOfLines={1}
+                                titleStyle={styles.listTitle}
+                            />
+                        </TouchableOpacity>
+                    )}/>
                 </View>
+                <View></View>
             </TouchableWithoutFeedback>
         );
 }
 
 const styles = StyleSheet.create({
+    something: {
+        flexGrow: 1, 
+        paddingBottom: 20
+    },
     backgroundContainer: {
         flex: 1,
         width: null,
@@ -135,9 +142,9 @@ const styles = StyleSheet.create({
     logoContainer:{
         marginTop: 50,
         marginBottom: 60,
-        marginLeft: 25,
+        justifyContent: 'center',
         alignItems: 'center',
-        width:360
+        
     },
     logoText:{
         color: 'black',

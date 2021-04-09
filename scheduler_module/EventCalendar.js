@@ -72,6 +72,7 @@ return(
 
         {/* list of events from firebase */}
         <FlatList
+            contentContainerStyle={{paddingBottom:550}}
             scrollEnabled='true'
             data={events}
             keyExtractor={item => item._id}

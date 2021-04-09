@@ -42,12 +42,13 @@ export default function ProfileList({navigation}) {
         }
         return initials
     }
-    
+ 
     return (
         <View style = {styles.container}>
             <Text style={styles.headerTitle}>Find a GOLD Girl</Text>
             <View style={styles.straightLine}/>
             <FlatList
+                contentContainerStyle={{paddingBottom:200}}
                 scrollEnabled = 'true'
                 data = {profileList}
                 keyExtractor = {item => item._id}
@@ -61,6 +62,7 @@ export default function ProfileList({navigation}) {
                         title = {getInitials(item.name)}
                         overlayContainerStyle = {{backgroundColor: '#F5B0C2'}}
                         />  
+
                         <Text style = {styles.name}>
                             {item.name}
                         </Text>

@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Alert, FlatLis
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import profilepic from '../assets/profilepic.png';
 import { firestore } from 'firebase';
-import firebase from '../database/firebase.js'
+import firebase from '../database/firebase.js';
+import { Avatar } from "react-native-elements";
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -37,6 +38,15 @@ export default function ProfileList({route, navigation}) {
         )
     }
 
+    function getInitials(username) {
+        let initials = "";
+        const split = username.split(' ', 3);
+        for(var i = 0; i < split.length; ++i) {
+            initials += split[i].charAt(0);
+        }
+        return initials
+    }
+
     return(
         <ScrollView style={styles.container}>
             <FlatList
@@ -47,18 +57,19 @@ export default function ProfileList({route, navigation}) {
                 )}
             />
             <View style={styles.straightLine}/>
-            <SafeAreaView style={styles.logoContainer}>
-                <Image 
-                    source={profilepic}
-                    style = {styles.profilePicture}
-                />   
-            </SafeAreaView>
+            
             <View>
                 <FlatList
                     data = {profile}
                     keyExtractor = {item => item._id}
                     renderItem = {({item}) => (
-                        <View>
+                        <View style={styles.logoContainer}>
+                        <Avatar 
+                        size = "xlarge"
+                        rounded
+                        title = {getInitials(item.name)}
+                        overlayContainerStyle = {{backgroundColor: '#F5B0C2'}}
+                        />  
                             <Text style={styles.name}>{item.name}</Text>
                             <Text style={styles.name}>{item.school} - {item.schoolYear}</Text>
                             <Text style={styles.name}>{item.email}</Text>

@@ -32,7 +32,7 @@ export default function ProfileList({navigation}) {
         navigation.navigate('Profile',{
             id: item,
         });
-    };
+    }
 
     function getInitials(username) {
         let initials = "";
@@ -41,8 +41,8 @@ export default function ProfileList({navigation}) {
             initials += split[i].charAt(0);
         }
         return initials
-    };
-
+    }
+ 
     return (
         <View style = {styles.container}>
             <Text style={styles.headerTitle}>Find a GOLD Girl</Text>
@@ -61,7 +61,8 @@ export default function ProfileList({navigation}) {
                         rounded
                         title = {getInitials(item.name)}
                         overlayContainerStyle = {{backgroundColor: '#F5B0C2'}}
-                        />   
+                        />  
+
                         <Text style = {styles.name}>
                             {item.name}
                         </Text>

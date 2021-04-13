@@ -114,6 +114,7 @@ export default function MainPage ({ navigation }) {
 
                 <View>
                 <FlatList
+                contentContainerStyle={{ paddingBottom: 1550 }}
                 scrollEnabled = 'true'
                 data = {profileList}
                 keyExtractor = {item => item._id}

@@ -56,6 +56,7 @@ export default function EventCalendar({navigation}) {
           Alert.alert("You have successfully RSVPed!");
   }
 
+  //return anything to be seen on screen using "<View>" and other react native components
 return(
     <View>
         <Calendar 

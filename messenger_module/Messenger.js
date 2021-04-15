@@ -5,6 +5,7 @@ import { IconButton, Title, List, Divider } from 'react-native-paper';
 import { firestore } from 'firebase';
 import Loading from '../assets/Loading';
 import firebase from '../database/firebase.js';
+import { useIsFocused } from '@react-navigation/native';
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -13,6 +14,7 @@ export default function Messenger({navigation}) {
     const [chats, setChats] = useState([]);
     const [loading, setLoading] = useState(true);
     const currentUser = firebase.auth().currentUser;
+    const isFocused = useIsFocused();
 
     //hook(allows you to use state and other React features) in our case here it's
     //used to call the chat collection from firebase 
@@ -41,20 +43,23 @@ export default function Messenger({navigation}) {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [isFocused]);
 
     if(loading) {
         return <Loading />;
     }
 
+    //return anything to be seen on screen using "<View>" and other react native components
     return(
     
         <View style = {styles.container}>
+        {/*displays a list of chat rooms the user is in*/}
         <FlatList
             data={chats}
             keyExtractor={item => item._id}
             ItemSeparatorComponent={() => <Divider />}
             renderItem={({item}) => (
+                //when chat room is pressed, navigates to the chat with the current messages
                 <TouchableOpacity
                     onPress={() => navigation.navigate('ChatRoom', { thread:item })}
                 >
@@ -75,11 +80,8 @@ export default function Messenger({navigation}) {
 
 }
 
+//various styles for each element on display are created here
 const styles = StyleSheet.create({
-    /*container: {
-        backgroundColor: '#f5f5f5',
-        flex: 1
-    },*/
 
     header:{
         marginTop: 15,

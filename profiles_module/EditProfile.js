@@ -18,6 +18,8 @@ export default function EditProfile({navigation}) {
 
     const docRef = firestore().collection('Users').where('_id', "==", currentUser.uid);
     
+    //hook(allows you to use state and other React features) in our case here it's
+    //used to call the users info
     useEffect(() => {
         const unsubscribe = docRef.onSnapshot((snapshot)=>{
             const profileData = snapshot.docs.map((doc)=>({
@@ -34,6 +36,7 @@ export default function EditProfile({navigation}) {
         return () => unsubscribe();
     }, []);
 
+    //function to handle updating any information that was changed during the edit phase
     function handleButtonPress() {
         if(updateName) {
             firestore().collection('Users').doc(currentUser.uid).update({
@@ -65,6 +68,7 @@ export default function EditProfile({navigation}) {
         navigation.navigate("About Me Page");
     }
 
+    //return anything to be seen on screen using "<View>" and other react native components 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={true}>
             <View>
@@ -168,13 +172,7 @@ export default function EditProfile({navigation}) {
     )
 }
 
-const buttonPressed = () => {
-    Alert.alert(
-        "Button has been pressed!",
-        "You have pressed the button!"
-    )
-}
-
+//various styles for each element on display are created here
 const styles = StyleSheet.create({
     container: {
         marginTop: 20,

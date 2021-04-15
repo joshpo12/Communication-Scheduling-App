@@ -15,6 +15,8 @@ export default function AboutMe({navigation}) {
     const docRef = firestore().collection('Users').where('_id', "==", currentUser.uid);
     const isFocused = useIsFocused();
 
+    //hook(allows you to use state and other React features) in our case here it's
+    //used to call the current users info
     useEffect(() => {
         const unsubscribe = docRef.onSnapshot((snapshot)=>{
             const profileData = snapshot.docs.map((doc)=>({
@@ -33,6 +35,7 @@ export default function AboutMe({navigation}) {
         return () => unsubscribe();
     }, [isFocused]);
 
+    //function to handle getting the intials of a user for display
     function getInitials(username) {
         let initials = "";
         const split = username.split(' ', 3);
@@ -41,14 +44,10 @@ export default function AboutMe({navigation}) {
         }
         return initials
     };
-    function buttonPressed() {
-        Alert.alert(
-            "Button has been pressed!",
-            "You have pressed the button!"
-        )
-    }
 
+    //return anything to be seen on screen using "<View>" and other react native components 
     return(
+        //displays all of the information belonging to current user
         <FlatList
             data = {profile}
             ListHeaderComponent = {
@@ -97,6 +96,7 @@ export default function AboutMe({navigation}) {
                 
     )};
 
+//various styles for each element on display are created here
 const styles = StyleSheet.create({
     container: {
         marginTop: 20,

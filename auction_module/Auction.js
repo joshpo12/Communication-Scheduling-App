@@ -153,7 +153,7 @@ export default function Auction({navigation}) {
                 </View>
             </ScrollView>
         );
-    }
+}
 
 const styles = StyleSheet.create({
     top_padding:{

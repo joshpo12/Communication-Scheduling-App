@@ -19,12 +19,14 @@ export default class Login extends Component {
         }
     }
 
+    //updates the variables based on what is typed on screen
     updateInput = (val, prop) => {
         const state = this.state;
         state[prop] = val;
         this.setState(state);
     }
 
+    //function to handle the logging in 
     login = () => {
         if(this.state.email === '' && this.state.password === '') {
             Alert.alert('Enter details to login.')
@@ -32,6 +34,7 @@ export default class Login extends Component {
             this.setState({
                 isLoading: true,
             })
+            //firebase function that allows user to sign in with already registered email and password
             firebase.auth()
             .signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((res) => {
@@ -48,6 +51,8 @@ export default class Login extends Component {
         }
     }
 
+    //return anything to be seen on screen using "<View>" and other react native components
+     //adding render() because this is a class 
     render() {
         const { navigate } = this.props.navigation;
         return (
@@ -101,13 +106,8 @@ export default class Login extends Component {
         );
     }
 }
-/*const buttonPressed = () => {
-    Alert.alert(
-        "Button has been pressed!",
-        "You have pressed the button!"
-        )
-        
-}*/
+
+//various styles for each element on display are created here
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,

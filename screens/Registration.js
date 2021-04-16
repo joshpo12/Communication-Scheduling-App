@@ -12,6 +12,7 @@ export default class Registration extends Component {
         title: 'Registration', 
     };
 
+    //creates an instance of an empty user
     constructor() {
         super();
         this.state = {
@@ -62,7 +63,6 @@ export default class Registration extends Component {
                     email: '',
                     password: ''
                 })
-                //this.props.navigation.navigate('Main')
             })
             .catch(error => this.setState({errorMessage: error.message }))
             
@@ -71,6 +71,8 @@ export default class Registration extends Component {
     }
 
 
+    //return anything to be seen on screen using "<View>" and other react native components
+    //adding render() because this is a class 
     render() {
         const { navigation } = this.props.navigation;
         return (
@@ -125,6 +127,7 @@ export default class Registration extends Component {
     }
 }
 
+//various styles for each element on display are created here
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,

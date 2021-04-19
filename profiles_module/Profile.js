@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions, Alert, FlatLis
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import profilepic from '../assets/profilepic.png';
 import { firestore } from 'firebase';
-import firebase from '../database/firebase.js'
+import firebase from '../database/firebase.js';
+import { Avatar } from "react-native-elements";
 
 const {width:WIDTH} = Dimensions.get('window')
 
@@ -14,6 +15,8 @@ export default function ProfileList({route, navigation}) {
     const [profile, setProfile] = useState([]);
     const docRef = firestore().collection('Users').where('_id', "==", selectedUser);
 
+    //hook(allows you to use state and other React features) in our case here it's
+    //used to call the current users info
     useEffect(() => {
         const unsubscribe = docRef.onSnapshot((snapshot)=>{
             const profileData = snapshot.docs.map((doc)=>({
@@ -30,14 +33,19 @@ export default function ProfileList({route, navigation}) {
         return () => unsubscribe();
     }, []);
 
-    function buttonPressed() {
-        Alert.alert(
-            "Button has been pressed!",
-            "You have pressed the button!"
-        )
+    //function to handle getting users initials 
+    function getInitials(username) {
+        let initials = "";
+        const split = username.split(' ', 3);
+        for(var i = 0; i < split.length; ++i) {
+            initials += split[i].charAt(0);
+        }
+        return initials
     }
 
+    //return anything to be seen on screen using "<View>" and other react native components 
     return(
+        //displays the information and bio of a selected user
         <ScrollView style={styles.container}>
             <FlatList
                 data = {profile}
@@ -47,18 +55,19 @@ export default function ProfileList({route, navigation}) {
                 )}
             />
             <View style={styles.straightLine}/>
-            <SafeAreaView style={styles.logoContainer}>
-                <Image 
-                    source={profilepic}
-                    style = {styles.profilePicture}
-                />   
-            </SafeAreaView>
+            
             <View>
                 <FlatList
                     data = {profile}
                     keyExtractor = {item => item._id}
                     renderItem = {({item}) => (
-                        <View>
+                        <View style={styles.logoContainer}>
+                        <Avatar 
+                        size = "xlarge"
+                        rounded
+                        title = {getInitials(item.name)}
+                        overlayContainerStyle = {{backgroundColor: '#F5B0C2'}}
+                        />  
                             <Text style={styles.name}>{item.name}</Text>
                             <Text style={styles.name}>{item.school} - {item.schoolYear}</Text>
                             <Text style={styles.name}>{item.email}</Text>
@@ -66,17 +75,18 @@ export default function ProfileList({route, navigation}) {
                         </View>
                         )}
                 />
-                <View>
+                {/*<View>
                     <TouchableOpacity style={styles.editProfileBtn} activeOpacity = {.5} 
                     onPress={()=> buttonPressed()}>
                         <Text style={styles.buttonText}>Send a message</Text>
                     </TouchableOpacity>
-                </View>
+                    </View>*/}
             
             </View>
         </ScrollView>
     )};
 
+//various styles for each element on display are created here    
 const styles = StyleSheet.create({
     container: {
         marginTop: 20,

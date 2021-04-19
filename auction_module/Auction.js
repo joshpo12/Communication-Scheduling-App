@@ -79,6 +79,7 @@ export default function Auction({navigation}) {
                 <View style={styles.form}>
                     <Text style={styles.inputTitle}>Value</Text>
                     <TextInput
+                        keyboardType='numeric'
                         autoCapitalize='none'
                         required
                         style={styles.input}
@@ -112,6 +113,7 @@ export default function Auction({navigation}) {
                 <View style={styles.form}>
                     <Text style={styles.inputTitle}>Phone Number</Text>
                     <TextInput
+                        keyboardType='numeric'
                         autoCapitalize='none'
                         required
                         style={styles.input}
@@ -151,7 +153,7 @@ export default function Auction({navigation}) {
                 </View>
             </ScrollView>
         );
-    }
+}
 
 const styles = StyleSheet.create({
     top_padding:{

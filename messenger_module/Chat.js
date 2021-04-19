@@ -101,7 +101,7 @@ export default function Chat({route}) {
         );
     }
 
-
+    //<GiftedChat> is used to handle the look and feel of the chat room
     return(
         <GiftedChat
             messages={messages}

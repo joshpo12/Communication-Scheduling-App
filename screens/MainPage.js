@@ -8,15 +8,22 @@ import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-h
 //import { ScreenStackHeaderRightView } from 'react-native-screens';
 import { firestore } from 'firebase';
 import firebase from '../database/firebase.js';
+import { useIsFocused } from '@react-navigation/native';
 
 const {width:WIDTH} = Dimensions.get('window')
 
 export default function MainPage ({ navigation }) {
 
+    //variables to store the use state, collection reference, and the current user
+    //isFocused variable is used for constantly keeping our information current with the database
     const [annoucements, setAnnouncements] = useState([]);
     const [profileList, setProfileList] = useState([]);
     const docRef = firestore().collection('Users');
+    const isFocused = useIsFocused();
+    const currentUser = firebase.auth().currentUser;
 
+    //hook(allows you to use state and other React features) in our case here it's
+    //used to call the annoucements chat and store it in a variable 
     useEffect(() => {
         const unsubscribe = firestore()
         .collection('chat')
@@ -38,8 +45,10 @@ export default function MainPage ({ navigation }) {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [isFocused]);
 
+    //hook(allows you to use state and other React features) in our case here it's
+    //used to call the list of users to display on the homepage
     useEffect(() => {
         const unsubscribe = docRef.onSnapshot((snapshot) =>{
             const listData = snapshot.docs.map((doc) => ({
@@ -50,8 +59,9 @@ export default function MainPage ({ navigation }) {
             setProfileList(listData);
         });
         return() => unsubscribe();
-    }, []);
+    }, [isFocused]);
     
+    //function to handle the pressing of name displayed, takes user to that profile page
     function handleSelect(item) {
         navigation.navigate('GOLD Girls', {
             screen: 'ProfileList',  
@@ -59,15 +69,23 @@ export default function MainPage ({ navigation }) {
         });
     }
 
+    //function to compare ids so that the current user is not displayed in the list of GOLD Girls to view
+    function compareIDs(item) {
+        return (item._id == currentUser.uid);
+    }
+
+    //return anything to be seen on screen using "<View>" and other react native components 
     return (
             <TouchableWithoutFeedback 
             onPress={Keyboard.dismiss} 
-            accessible={false}>
+            accessible={false}
+            >
+                
                 <Text style={styles.logoText}></Text>
-                <SafeAreaView style={styles.logoContainer}>
+                <View style={styles.logoContainer}>
                     <Image source={logo}/>
                     
-                </SafeAreaView>
+                </View>
 
                 <View style = {styles.horizontalLine}></View>
 
@@ -99,17 +117,19 @@ export default function MainPage ({ navigation }) {
                 </View>
 
                 <View alignItems = 'center'>
-                <Text style = {styles.mainPageText}>
-                    Find a Fellow GOLD Girl</Text>
+                    <Text style = {styles.mainPageText}>
+                        Find a Fellow GOLD Girl</Text>
                 </View>
 
                 <View>
                 <FlatList
+                contentContainerStyle={{ paddingBottom: 1550 }}
                 scrollEnabled = 'true'
                 data = {profileList}
                 keyExtractor = {item => item._id}
                 ItemSeparatorComponent = {() => <Divider />}
                 renderItem = {({item}) => (
+                    compareIDs(item) == false ? 
                     <TouchableOpacity onPress = {() => handleSelect(item._id)}>
                     <List.Item
                     title={item.name}
@@ -117,14 +137,21 @@ export default function MainPage ({ navigation }) {
                     titleStyle={styles.listTitle}
                 />
                     </TouchableOpacity>
+                    : null
                 )}
             />
                 </View>
+                <View></View>
             </TouchableWithoutFeedback>
         );
 }
 
+//various styles for each element on display are created here
 const styles = StyleSheet.create({
+    something: {
+        flexGrow: 1, 
+        paddingBottom: 20
+    },
     backgroundContainer: {
         flex: 1,
         width: null,
@@ -135,9 +162,9 @@ const styles = StyleSheet.create({
     logoContainer:{
         marginTop: 50,
         marginBottom: 60,
-        marginLeft: 25,
+        justifyContent: 'center',
         alignItems: 'center',
-        width:360
+        
     },
     logoText:{
         color: 'black',
@@ -232,6 +259,7 @@ const styles = StyleSheet.create({
     },
 
     messageComment: {
+        fontSize: 11,
         marginTop: -45,
         marginLeft: 100,
         marginRight: 100

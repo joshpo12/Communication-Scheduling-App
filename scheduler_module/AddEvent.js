@@ -23,6 +23,7 @@ export default function AddEvent({navigation}) {
           });
     }
 
+    //return anything to be seen on screen using "<View>" and other react native components
     return(
         <View>
           {/* creates sliding modal */}

@@ -22,20 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import EditProfile from './profiles_module/EditProfile';
 import Auction from './auction_module/Auction';
 
-
-// const DrawerNavigator = createDrawerNavigator({
-//     AnimatedLoader: { screen: AnimatedLoader },
-//     Login: { screen: Login},
-//     Registration: { screen: Registration},
-//     AboutMe: {screen: AboutMe},
-//     AuctionForm: {screen: AuctionForm},
-//     SubmitAssignment: {screen: SubmitAssignment},
-//     Scheduling: { screen: Scheduling},
-//     Messager: { screen: Messager},
-//     Main: { screen: Main}
-// });
-
-
+//variables are created as Stack Navigators
 const Stack = createStackNavigator();
 const LogInStack = createStackNavigator();
 const MainStack = createStackNavigator();
@@ -47,7 +34,8 @@ const ChatStack = createStackNavigator();
 const NewMessageStack = createStackNavigator();
 const NewSchedulerStack = createStackNavigator();
 
-
+//create functions for navigating between sets of pages using the variables 
+//navigates the stack for the login and registration 
 const LogInScreen = () => {
     return(
         <LogInStack.Navigator>
@@ -59,6 +47,8 @@ const LogInScreen = () => {
         </LogInStack.Navigator>
     );
 }
+
+//navigates the stack for the main page
 const MainStackScreen = ({navigation}) => {
     return(
         <MainStack.Navigator 
@@ -76,6 +66,8 @@ const MainStackScreen = ({navigation}) => {
         </MainStack.Navigator>
     )
 }
+
+//navigates the stack for the About me pages
 const AboutMeStackScreen = ({navigation}) => {
     return(
         <AboutMeStack.Navigator 
@@ -94,6 +86,8 @@ const AboutMeStackScreen = ({navigation}) => {
         </AboutMeStack.Navigator>
     )
 }
+
+//navigates the stack for the silent auction item
 const AuctionStackScreen = ({navigation}) => {
     return(
         <AuctionStack.Navigator 
@@ -102,7 +96,7 @@ const AuctionStackScreen = ({navigation}) => {
                 headerTintColor: '#ffffff',
                 headerTitleStyle: { fontSize: 22 }
             }}>
-            <AuctionStack.Screen name="About Me Page" component={Auction} options={{
+            <AuctionStack.Screen name="Submit a Silent Auction Item" component={Auction} options={{
                 headerLeft: () => (
                     <Icon.Button name = "ios-menu" size = {25}
                     backgroundColor="#F5B0C2" onPress={() => navigation.openDrawer()}>
@@ -111,6 +105,8 @@ const AuctionStackScreen = ({navigation}) => {
         </AuctionStack.Navigator>
     )
 }
+
+//navigates the stack for the messenger pages
 const MessengerStack = () => {
     return(
         <NewMessageStack.Navigator mode='modal' headerMode='none'>
@@ -120,7 +116,7 @@ const MessengerStack = () => {
     );
 }
 
-
+//navigates the stack for the GOLD Girls
 const ProfilesStackScreen = ({navigation}) => {
     return(
         <ProfilesStack.Navigator screenOptions={{
@@ -140,6 +136,7 @@ const ProfilesStackScreen = ({navigation}) => {
     )
 }
 
+//navigates the stack for the scheduler 
 const SchedulerStackScreen = () => {
     return(
         <NewSchedulerStack.Navigator name='modal' headerMode='none'>
@@ -151,8 +148,10 @@ const SchedulerStackScreen = () => {
     )
 }
 
+//variable for a drawer navigator
 const Drawer = createDrawerNavigator();
 
+//create a single drawer navigator (side menu in our case) for access to every screen 
 export default function App() {
     return (
         <NavigationContainer>
@@ -170,7 +169,7 @@ export default function App() {
     );
 }
 
-//stack navigator to handle the messenger components 
+//stack function to handle the interaction of the messenger components 
 const chat = () => {
     return(
         <ChatStack.Navigator
@@ -205,6 +204,7 @@ const chat = () => {
     );
 }
 
+//stack function to handle the interaction of the scheduler pages 
 const SchedulerHeader = () => {
     return(
         <SchedulerStack.Navigator

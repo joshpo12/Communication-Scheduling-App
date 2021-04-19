@@ -5,12 +5,15 @@ import { IconButton, Title, List, Divider } from 'react-native-paper';
 import { firestore } from 'firebase';
 import firebase from '../database/firebase.js';
 import Loading from '../assets/Loading';
+import { useIsFocused } from '@react-navigation/native';
 
 const {width:WIDTH} = Dimensions.get('window')
 
 export default function NewMessage({ navigation }) {
     const currentUser = firebase.auth().currentUser;
     const currentUserName = currentUser.displayName;
+
+    const isFocused = useIsFocused();
 
     const [room, setRoom] = useState('');
     const [loading, setLoading] = useState(true);
@@ -37,7 +40,7 @@ export default function NewMessage({ navigation }) {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [isFocused]);
 
     if(loading) {
         return <Loading />;
@@ -73,10 +76,16 @@ export default function NewMessage({ navigation }) {
         }
     }
 
+    //function to compare ids so that the current user is not displayed in the list of GOLD Girls to view
+    function compareIDs(item) {
+        return (item._id == currentUser.uid);
+    }
+
     return(
     
         <View style = {styles.rootContainer}>
         <View style={styles.closeButtonContainer}>
+        {/*button to navigate back to messenger*/}
             <IconButton
                 icon='close-circle'
                 size={36}
@@ -86,11 +95,14 @@ export default function NewMessage({ navigation }) {
         </View>
 
         <View style={styles.listContainer}>
+        {/*displays list of users*/}
         <FlatList
             data={room}
             keyExtractor={item => item._id}
             ItemSeparatorComponent={() => <Divider />}
             renderItem={({item}) => (
+                //when user is pressed, navigate to messenger and creates a new chat room with chosen user
+                compareIDs(item) == false ?
                 <TouchableOpacity
                     onPress={() => handleButtonPress(item._id, item.name)}
                 >
@@ -103,6 +115,7 @@ export default function NewMessage({ navigation }) {
                     descriptionNumberOfLines={1}
                 />
                 </TouchableOpacity>
+                : null
             )}
         />
         </View>
@@ -112,9 +125,7 @@ export default function NewMessage({ navigation }) {
 
 }
 
-
-
-
+//various styles for each element on display are created here
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,

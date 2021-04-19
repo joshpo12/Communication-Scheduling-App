@@ -14,6 +14,8 @@ export default function ProfileList({navigation}) {
     const [profileList, setProfileList] = useState([]);
     const docRef = firestore().collection('Users');
 
+    //hook(allows you to use state and other React features) in our case here it's
+    //used to call a list of all users
     useEffect(() => {
         const unsubscribe = docRef.onSnapshot((snapshot)=>{
             const listData = snapshot.docs.map((doc)=>({
@@ -28,16 +30,30 @@ export default function ProfileList({navigation}) {
         return () => unsubscribe();
     }, []);
 
+    //function to handle the pressing of a user, navigate to that profile page
     function handleSelect(item) {
         navigation.navigate('Profile',{
             id: item,
         });
     }
+
+    function getInitials(username) {
+        let initials = "";
+        const split = username.split(' ', 3);
+        for(var i = 0; i < split.length; ++i) {
+            initials += split[i].charAt(0);
+        }
+        return initials
+    }
+ 
+    //return anything to be seen on screen using "<View>" and other react native components 
     return (
+        //displays a list of all registered users 
         <View style = {styles.container}>
             <Text style={styles.headerTitle}>Find a GOLD Girl</Text>
             <View style={styles.straightLine}/>
             <FlatList
+                contentContainerStyle={{paddingBottom:200}}
                 scrollEnabled = 'true'
                 data = {profileList}
                 keyExtractor = {item => item._id}
@@ -45,10 +61,13 @@ export default function ProfileList({navigation}) {
                 renderItem = {({item}) => (
                     <TouchableOpacity onPress = {() => handleSelect(item._id)}>
                         <View style = {styles.list}>
-                        <Image
-                            style = {styles.tinyPic}
-                            source = {profilepic}
-                        />
+                        <Avatar 
+                        size = "xlarge"
+                        rounded
+                        title = {getInitials(item.name)}
+                        overlayContainerStyle = {{backgroundColor: '#F5B0C2'}}
+                        />  
+
                         <Text style = {styles.name}>
                             {item.name}
                         </Text>
@@ -60,12 +79,7 @@ export default function ProfileList({navigation}) {
     )
 };
 
-function buttonPressed() {
-    Alert.alert(
-        "Button has been pressed!",
-        "You have pressed the button!"
-    )
-}
+//various styles for each element on display are created here
 const styles = StyleSheet.create({
     container: {
         marginTop: 20,
